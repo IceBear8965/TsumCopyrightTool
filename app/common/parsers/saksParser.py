@@ -1,8 +1,8 @@
 import requests
 from bs4 import  BeautifulSoup
 import lxml
-from scripts.addDots import addDots
-from scripts.sortInput import sortInput
+from app.common.addDots import addDots
+from app.common.sortInput import sortInput
 
 headers = {
     "accept": "*/*",

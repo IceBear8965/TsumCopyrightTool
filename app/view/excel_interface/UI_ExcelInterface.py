@@ -31,11 +31,6 @@ class Ui_ExcelInterface(object):
         self.horizontalLayout.addWidget(self.websiteNameCombo, 0, QtCore.Qt.AlignLeft)
         spacerItem = QtWidgets.QSpacerItem(30, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.goToSetUpBtn = PushButton(ExcelInterface)
-        self.goToSetUpBtn.setObjectName("goToSetUpBtn")
-        self.horizontalLayout.addWidget(self.goToSetUpBtn, 0, QtCore.Qt.AlignLeft)
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem1)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.inputFileCard = QtWidgets.QVBoxLayout()
         self.inputFileCard.setObjectName("inputFileCard")
@@ -59,7 +54,6 @@ class Ui_ExcelInterface(object):
         self.websiteNameCombo.setItemText(0, _translate("ExcelInterface", "Saks85"))
         self.websiteNameCombo.setItemText(1, _translate("ExcelInterface", "Saucony"))
         self.websiteNameCombo.setItemText(2, _translate("ExcelInterface", "Arena"))
-        self.goToSetUpBtn.setText(_translate("ExcelInterface", "Go To Set Up"))
         self.excelRunBtn.setText(_translate("ExcelInterface", "Parse"))
 from qfluentwidgets import ComboBox, PushButton, TableWidget
 

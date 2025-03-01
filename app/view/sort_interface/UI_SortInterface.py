@@ -29,11 +29,6 @@ class Ui_SortInterface(object):
         self.horizontalLayout.addWidget(self.useFiltersToggle, 0, QtCore.Qt.AlignLeft)
         spacerItem = QtWidgets.QSpacerItem(30, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.goToSetUpBtn = PushButton(SortInterface)
-        self.goToSetUpBtn.setObjectName("goToSetUpBtn")
-        self.horizontalLayout.addWidget(self.goToSetUpBtn)
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem1)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.sortTextInput = PlainTextEdit(SortInterface)
         self.sortTextInput.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByKeyboard|QtCore.Qt.LinksAccessibleByMouse|QtCore.Qt.TextBrowserInteraction|QtCore.Qt.TextEditable|QtCore.Qt.TextEditorInteraction|QtCore.Qt.TextSelectableByKeyboard|QtCore.Qt.TextSelectableByMouse)
@@ -60,7 +55,6 @@ class Ui_SortInterface(object):
     def retranslateUi(self, SortInterface):
         _translate = QtCore.QCoreApplication.translate
         SortInterface.setWindowTitle(_translate("SortInterface", "Form"))
-        self.goToSetUpBtn.setText(_translate("SortInterface", "Go To Set Up"))
         self.sortTextInput.setPlaceholderText(_translate("SortInterface", "Input"))
         self.sortBtn.setText(_translate("SortInterface", "Sort"))
         self.plainTextEdit_2.setPlaceholderText(_translate("SortInterface", "Output"))

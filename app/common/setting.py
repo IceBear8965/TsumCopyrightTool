@@ -13,3 +13,4 @@ CONFIG_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.AppLocalData
 CONFIG_FILE = CONFIG_FOLDER / "config.json"
 
 DOCUMENT_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.DocumentsLocation))
+DOWNLOAD_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.DownloadLocation))

@@ -89,7 +89,7 @@
       </layout>
      </item>
      <item>
-      <widget class="PlainTextEdit" name="plainTextEdit_2">
+      <widget class="PlainTextEdit" name="sortedOutput">
        <property name="textInteractionFlags">
         <set>Qt::NoTextInteraction</set>
        </property>

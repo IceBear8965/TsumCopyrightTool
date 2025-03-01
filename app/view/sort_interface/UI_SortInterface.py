@@ -40,10 +40,10 @@ class Ui_SortInterface(object):
         self.sortBtn.setObjectName("sortBtn")
         self.horizontalLayout_2.addWidget(self.sortBtn, 0, QtCore.Qt.AlignLeft)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
-        self.plainTextEdit_2 = PlainTextEdit(SortInterface)
-        self.plainTextEdit_2.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
-        self.plainTextEdit_2.setObjectName("plainTextEdit_2")
-        self.verticalLayout.addWidget(self.plainTextEdit_2)
+        self.sortedOutput = PlainTextEdit(SortInterface)
+        self.sortedOutput.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
+        self.sortedOutput.setObjectName("sortedOutput")
+        self.verticalLayout.addWidget(self.sortedOutput)
         self.copySortedBtn = PushButton(SortInterface)
         self.copySortedBtn.setObjectName("copySortedBtn")
         self.verticalLayout.addWidget(self.copySortedBtn, 0, QtCore.Qt.AlignLeft)
@@ -57,7 +57,7 @@ class Ui_SortInterface(object):
         SortInterface.setWindowTitle(_translate("SortInterface", "Form"))
         self.sortTextInput.setPlaceholderText(_translate("SortInterface", "Input"))
         self.sortBtn.setText(_translate("SortInterface", "Sort"))
-        self.plainTextEdit_2.setPlaceholderText(_translate("SortInterface", "Output"))
+        self.sortedOutput.setPlaceholderText(_translate("SortInterface", "Output"))
         self.copySortedBtn.setText(_translate("SortInterface", "Copy"))
 from qfluentwidgets import PlainTextEdit, PushButton, SwitchButton
 

@@ -37,7 +37,6 @@ class ParseInterface(Ui_ParseInterface, QWidget):
             match websiteName:
                 case "Saks85":
                     try:
-                        print(1)
                         output = parseSaks(url, filters, order)
                         self.parsedOutput.setPlainText(output)
                     except Exception:
@@ -93,3 +92,25 @@ class ParseInterface(Ui_ParseInterface, QWidget):
             position=InfoBarPosition.BOTTOM_RIGHT,
             parent=self
         )
+    def copyToClipboard(self):
+        if len(self.parsedOutput.toPlainText()) > 1:
+            self.clipboard.setText(self.parsedOutput.toPlainText())
+            InfoBar.success(
+                title="Clipboard",
+                content="Copied to clipboard",
+                orient=Qt.Horizontal,
+                isClosable=True,
+                duration=1000,
+                position=InfoBarPosition.BOTTOM_RIGHT,
+                parent=self
+            )
+        else:
+            InfoBar.warning(
+                title="Error",
+                content="Output field is empty",
+                orient=Qt.Horizontal,
+                isClosable=True,
+                duration=2000,
+                position=InfoBarPosition.BOTTOM_RIGHT,
+                parent=self
+            )

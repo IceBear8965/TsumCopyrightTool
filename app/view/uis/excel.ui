@@ -106,7 +106,7 @@
       <layout class="QVBoxLayout" name="inputFileCard"/>
      </item>
      <item>
-      <widget class="TableWidget" name="tablePreview"/>
+      <widget class="CustomTable" name="tablePreview"/>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0">
@@ -155,11 +155,6 @@
    <header>qfluentwidgets</header>
   </customwidget>
   <customwidget>
-   <class>TableWidget</class>
-   <extends>QTableWidget</extends>
-   <header>qfluentwidgets</header>
-  </customwidget>
-  <customwidget>
    <class>SwitchButton</class>
    <extends>QPushButton</extends>
    <header>qfluentwidgets</header>
@@ -169,6 +164,11 @@
 </class>
    <extends>QProgressBar</extends>
    <header>qfluentwidgets</header>
+  </customwidget>
+  <customwidget>
+   <class>CustomTable</class>
+   <extends>QTableWidget</extends>
+   <header>app.components.custom_table</header>
   </customwidget>
  </customwidgets>
  <resources/>

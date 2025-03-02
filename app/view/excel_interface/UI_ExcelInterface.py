@@ -41,7 +41,7 @@ class Ui_ExcelInterface(object):
         self.inputFileCard = QtWidgets.QVBoxLayout()
         self.inputFileCard.setObjectName("inputFileCard")
         self.verticalLayout.addLayout(self.inputFileCard)
-        self.tablePreview = TableWidget(ExcelInterface)
+        self.tablePreview = CustomTable(ExcelInterface)
         self.tablePreview.setObjectName("tablePreview")
         self.tablePreview.setColumnCount(0)
         self.tablePreview.setRowCount(0)
@@ -70,7 +70,8 @@ class Ui_ExcelInterface(object):
         self.websiteNameCombo.setItemText(1, _translate("ExcelInterface", "Saucony"))
         self.websiteNameCombo.setItemText(2, _translate("ExcelInterface", "Arena"))
         self.excelRunBtn.setText(_translate("ExcelInterface", "Parse"))
-from qfluentwidgets import ComboBox, ProgressBar, PushButton, SwitchButton, TableWidget
+from app.components.custom_table import CustomTable
+from qfluentwidgets import ComboBox, ProgressBar, PushButton, SwitchButton
 
 
 if __name__ == "__main__":

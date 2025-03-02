@@ -37,7 +37,7 @@ The main goal is to reduce the time spent on tedious work with text.
    git remote -v # confirm the changes
    ```
 ## License
-PyQt-Fluent-Widgets is licensed under [GPLv3](./LICENSE) for non-commercial project. 
+PyQt-Fluent-Widgets is licensed under [GPLv3](./LICENSE). 
 
 Copyright © 2025 by IceBear8965.
 

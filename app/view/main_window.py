@@ -1,3 +1,4 @@
+import os
 from PyQt5.QtGui import QIcon, QDesktopServices, QColor
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication
@@ -15,6 +16,8 @@ from app.view.sort_interface.sort_interface import SortInterface
 from app.view.excel_interface.excel_interface import ExcelInterface
 from app.view.setup_interface.setup_interface import SetupInterface
 from app.view.setting_interface.setting_interface import SettingInterface
+
+basedir = os.path.dirname(__file__)
 
 class MainWindow(FluentWindow):
     def __init__(self):
@@ -39,7 +42,7 @@ class MainWindow(FluentWindow):
         self.resize(860, 680)
         self.setMinimumWidth(760)
         self.setWindowTitle('Tsum Copyright Tool')
-        self.setWindowIcon(QIcon("app/resources/images/logo_256x256.png"))
+        self.setWindowIcon(QIcon(os.path.join(basedir, "../resources/images/tsumlogo.ico")))
         self.setObjectName("mainWindow")
 
         desktop = QApplication.desktop().availableGeometry()

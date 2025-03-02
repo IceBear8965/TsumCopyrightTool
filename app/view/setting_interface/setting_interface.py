@@ -1,12 +1,13 @@
 # coding:utf-8
 from qfluentwidgets import (ComboBoxSettingCard, SwitchSettingCard, OptionsSettingCard, ExpandLayout, Theme,
-                            setTheme, isDarkTheme, setFont, SettingCardGroup, TitleLabel, ScrollArea)
+                            setTheme, isDarkTheme, setFont, SettingCardGroup, TitleLabel, ScrollArea, PushSettingCard)
 from qfluentwidgets import FluentIcon as FIF
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QDesktopServices, QFont
 from PyQt5.QtWidgets import QWidget, QLabel, QFileDialog
 
+from app.common.setting import DOCUMENT_FOLDER
 from app.common.signal_bus import signalBus
 from app.common.config import cfg
 
@@ -20,6 +21,15 @@ class SettingInterface(ScrollArea):
 
         # setting label
         self.settingLabel = TitleLabel(self.tr("Settings"), self)
+
+        # Folders group
+        self.foldersGroup = SettingCardGroup(self.tr("Folders"), self.scrollWidget)
+        self.outputFolderCard = PushSettingCard(
+            self.tr("Select folder"),
+            FIF.FOLDER_ADD,
+            self.tr("Output folder"),
+            cfg.get(cfg.outputFolder),
+            parent=self.foldersGroup)
 
         # personalization
         self.personalGroup = SettingCardGroup(
@@ -64,6 +74,9 @@ class SettingInterface(ScrollArea):
     def __initLayout(self):
         self.settingLabel.move(36, 50)
 
+        # folders
+        self.foldersGroup.addSettingCard(self.outputFolderCard)
+
         # personalization
         self.personalGroup.addSettingCard(self.themeCard)
         self.personalGroup.addSettingCard(self.micaCard)
@@ -71,9 +84,21 @@ class SettingInterface(ScrollArea):
         # add setting card group to layout
         self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(36, 10, 36, 0)
+        self.expandLayout.addWidget(self.foldersGroup)
         self.expandLayout.addWidget(self.personalGroup)
+
+    def __onOutputFolderCardClicked(self):
+        """ download folder card clicked slot """
+        folder = QFileDialog.getExistingDirectory(self, self.tr("Select folder"), str(DOCUMENT_FOLDER), QFileDialog.ShowDirsOnly)
+        if not folder or cfg.get(cfg.outputFolder) == folder:
+            return
+
+        cfg.set(cfg.outputFolder, folder)
+        self.outputFolderCard.setContent(folder)
 
     def _connectSignalToSlot(self):
         # personalization
         cfg.themeChanged.connect(setTheme)
         self.micaCard.checkedChanged.connect(signalBus.micaEnableChanged)
+        self.outputFolderCard.clicked.connect(
+            self.__onOutputFolderCardClicked)

@@ -54,7 +54,8 @@ Copyright © 2025 by IceBear8965.
 [QFluentWidgets-url]: https://qfluentwidgets.com/
 [Repo Size]: https://img.shields.io/github/repo-size/IceBear8965/TsumCopyrightTool?logo=github&logoColor=%23fff&color=%2332b336&style=for-the-badge
 [Code Size]: https://img.shields.io/github/languages/code-size/IceBear8965/TsumCopyrightTool?logo=github&logoColor=%23fff&color=%2332b336&style=for-the-badge
-[License-shield]: https://img.shields.io/github/license/IceBear8965/TsumCopyrightTool?logo=gnu&logoColor=%23fff&color=%23a32d2a%&style=for-the-badge
+[License-shield]: https://img.shields.io/github/license/IceBear8965/TsumCopyrightTool?style=for-the-badge&logo=gnu&logoColor=%23fff&color=%23a32d2a
+
 [License-url]: https://www.gnu.org/licenses/gpl-3.0.en.html
 
 [Tsum-url]: https://tsum.ua/

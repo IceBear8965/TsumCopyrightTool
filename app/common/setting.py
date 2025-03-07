@@ -24,6 +24,7 @@ RELEASE_URL = "https://github.com/zhiyiYo/Fluent-M3U8/releases"
 
 CONFIG_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.AppLocalDataLocation)) / APP_NAME
 CONFIG_FILE = CONFIG_FOLDER / "config.json"
+SETTING_FILE = CONFIG_FILE / "setting.json"
 
 DOCUMENT_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.DocumentsLocation))
 DOWNLOAD_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.DownloadLocation))

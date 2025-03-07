@@ -43,7 +43,6 @@ class ParseInterface(Ui_ParseInterface, QWidget):
         url = self.inputUrl.text()
         filters, order = getSettings()
 
-
         if len(url) > 10:
             match websiteName:
                 case "Saks85":

@@ -23,7 +23,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="LineEdit" name="lineEdit"/>
+            <widget class="LineEdit" name="presetNameEdit"/>
            </item>
            <item>
             <widget class="ToolButton" name="delPresetBtn">
@@ -42,7 +42,7 @@
           </layout>
          </item>
          <item alignment="Qt::AlignTop">
-          <widget class="ListView" name="listView"/>
+          <widget class="ListView" name="presetList"/>
          </item>
         </layout>
        </item>
@@ -114,7 +114,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item alignment="Qt::AlignLeft">
-        <widget class="PushButton" name="saveSettingsBtn">
+        <widget class="PushButton" name="savePresetBtn">
          <property name="text">
           <string>Save</string>
          </property>

@@ -47,7 +47,6 @@ class ListItemDelegate(TableItemDelegate):
         self.selectedRows.clear()
 
 class SetupInterface(Ui_SetUpInterface, QWidget):
-
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
@@ -65,12 +64,6 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
 
         # creating saver instance
         self.saver = Saver()
-
-        # loading data from file
-        self.savedData = self.saver.load("setting.json")
-        if self.saver.load("setting.json"):
-           presetModel.dataList = self.savedData
-
 
         # set default preset on load
         if len(presetModel.dataList[1]) != 0:
@@ -101,7 +94,7 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
             presetModel.layoutChanged.emit()
 
             self.presetNameEdit.clear()
-            self.saver.save(presetModel.dataList, "setting.json")
+            self.saver.save(presetModel.dataList, SETTING_FILE)
 
     def changePreset(self):
         try:
@@ -114,7 +107,7 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
                 presetModel.dataList[1][index][2] = order
                 presetModel.layoutChanged.emit()
 
-                self.saver.save(presetModel.dataList, "setting.json")
+                self.saver.save(presetModel.dataList, SETTING_FILE)
             # Success info bar
             InfoBar.success(
                 title='Save',
@@ -148,7 +141,7 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
         self.orderEdit.clear()
 
         presetModel.layoutChanged.emit()
-        self.saver.save(presetModel.dataList, "setting.json")
+        self.saver.save(presetModel.dataList, SETTING_FILE)
 
     def onSelectionChanged(self):
         newSelectedItem = self.presetList.selectedIndexes()[0].row()
@@ -159,4 +152,4 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
         self.filtersEdit.setPlainText(filters)
         self.orderEdit.setPlainText(order)
 
-        self.saver.save(presetModel.dataList, "setting.json")
+        self.saver.save(presetModel.dataList, SETTING_FILE)

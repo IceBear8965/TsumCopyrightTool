@@ -20,10 +20,12 @@ from qfluentwidgets import (NavigationAvatarWidget, NavigationItemPosition, Mess
                             SplashScreen, SystemThemeListener, isDarkTheme, setTheme, Theme)
 from qfluentwidgets import FluentIcon as FIF
 
-
+from app.common.presetModel import presetModel
+from app.common.saver import Saver
 from app.common.signal_bus import signalBus
 from app.common.config import cfg
 from app.common.icon import CustomIcons
+from app.common.setting import SETTING_FILE
 from app.view.parse_interface.parse_interface import ParseInterface
 from app.view.sort_interface.sort_interface import SortInterface
 from app.view.excel_interface.excel_interface import ExcelInterface
@@ -57,6 +59,12 @@ class MainWindow(FluentWindow):
         self.setWindowTitle('Tsum Copyright Tool')
         self.setWindowIcon(QIcon(os.path.join(basedir, "../resources/images/tsumlogo.ico")))
         self.setObjectName("mainWindow")
+
+        # loading data from file
+        self.saver = Saver()
+        self.savedData = self.saver.load(SETTING_FILE)
+        if self.saver.load(SETTING_FILE):
+            presetModel.dataList = self.savedData
 
         desktop = QApplication.desktop().availableGeometry()
         w, h = desktop.width(), desktop.height()

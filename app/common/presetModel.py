@@ -34,9 +34,11 @@ class PresetModel(QAbstractListModel):
         self.dataList[1].pop(self.dataList[1].index(self.dataList[1][index]))
 
     def getParams(self):
-        filters = self.dataList[self.activeIndex][1].split("\n")
-        order = self.dataList[self.activeIndex][2].split("\n")
-
-        return filters, order
+        if len(self.getActivePreset()) != 0:
+            filters = self.getActivePreset()[1].split("\n")
+            order = self.getActivePreset()[2].split("\n")
+            return filters, order
+        else:
+            return [], []
 
 presetModel = PresetModel()

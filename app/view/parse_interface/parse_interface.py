@@ -16,7 +16,6 @@ from PyQt5.QtCore import Qt
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import InfoBar, InfoBarPosition
 from app.view.parse_interface.UI_ParseInterface import Ui_ParseInterface
-from app.common.signal_bus import signalBus
 
 from app.common.getSettings import getSettings
 from app.common.parsers.saksParser import parseSaks
@@ -32,7 +31,6 @@ class ParseInterface(Ui_ParseInterface, QWidget):
         self.parseBtn.setIcon(FIF.CLOUD_DOWNLOAD)
         self.copyParsedBtn.setIcon(FIF.COPY)
         self.clipboard = QApplication.clipboard()
-
         # connect signal to slot
         self.parseBtn.clicked.connect(self.onParseBtnClicked)
         self.copyParsedBtn.clicked.connect(self.copyToClipboard)
@@ -42,6 +40,8 @@ class ParseInterface(Ui_ParseInterface, QWidget):
         websiteName = self.webSiteNameCombo.currentText()
         url = self.inputUrl.text()
         filters, order = getSettings()
+        print(filters)
+        print(order)
 
         if len(url) > 10:
             match websiteName:

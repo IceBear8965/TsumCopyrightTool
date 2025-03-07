@@ -28,6 +28,8 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
         self.setObjectName("setupInterface")
         self.saveSettingsBtn.setIcon(FIF.SAVE)
         self.saveSettingsBtn.clicked.connect(self.saveSettings)
+        self.addPresetBtn.setIcon(FIF.ADD)
+        self.delPresetBtn.setIcon(FIF.REMOVE)
         if len(cfg.filters.value) != 0:
             self.filtersEdit.setPlainText("\n".join(cfg.filters.value))
         if len(cfg.order.value) != 0:

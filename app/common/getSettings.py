@@ -11,9 +11,9 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
 PURPOSE. See the GNU General Public License for more details.
 '''
 
-from app.common.config import cfg
+from app.common.presetModel import presetModel
 
 def getSettings():
-    filters = cfg.filters.value
-    order = cfg.order.value
+    filters = presetModel.getParams()[0]
+    order = presetModel.getParams()[1]
     return filters, order

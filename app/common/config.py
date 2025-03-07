@@ -26,10 +26,6 @@ class Config(QConfig):
     # Personalization
     micaEnabled = ConfigItem("MainWindow", "MicaEnabled", isWin11(), BoolValidator())
 
-    # Set up
-    filters = ConfigItem("SetUp", "Filters", [], ConfigValidator())
-    order = ConfigItem("SetUp", "Order", [], ConfigValidator())
-
 cfg = Config()
 cfg.themeMode.value = Theme.AUTO
 qconfig.load(str(CONFIG_FILE.absolute()), cfg)

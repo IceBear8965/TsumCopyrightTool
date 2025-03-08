@@ -26,11 +26,11 @@ from app.common.parsers.saksParser import parseSaks
 from app.common.parsers.sauconyParser import parseSaucony
 from app.common.parsers.arenaParser import parseArena
 from app.common.sortInput import sortInput
-from app.common.writeToExcel import writeOutputToExcel
 from app.common.excelHandler import excelHandler
 
 from app.components.file_card import FileCard
 from app.view.excel_interface.UI_ExcelInterface import Ui_ExcelInterface
+from app.common.saver import Saver
 
 
 # Worker class for working with Excel
@@ -107,10 +107,12 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.current_sheet = ""
         self.setObjectName("excelInterface")
         self.toggleUrlParsing()
+        self.tablePreview.verticalHeader().show()
         self.useUrlToggle.setOnText("Parsing from url`s")
         self.useUrlToggle.setOffText("Formatting descriptions")
         self.progressBar.setProperty("value", 0)
         self.sheetsView.enableTransparentBackground()
+        self.saver = Saver()
 
         # Multithreading
         self.ExcelParser = ExcelParser()
@@ -138,7 +140,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
 
     # Multithreading get results from ExcelParser worker
     def on_format_excel_result_ready(self, output):
-        writeOutputToExcel(output, cfg.get(cfg.outputFolder))
+        self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
         InfoBar.success(
             title="Formatting",
             content="Excel table formatted successfully",
@@ -150,7 +152,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         )
 
     def on_parse_excel_result_ready(self, output):
-        writeOutputToExcel(output, cfg.get(cfg.outputFolder))
+        self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
         InfoBar.success(
             title="Parsing",
             content="Excel table parsed successfully",

@@ -46,6 +46,21 @@ class Ui_ExcelInterface(object):
         self.tablePreview.setColumnCount(0)
         self.tablePreview.setRowCount(0)
         self.verticalLayout.addWidget(self.tablePreview)
+        self.sheetsView = SmoothScrollArea(ExcelInterface)
+        self.sheetsView.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.sheetsView.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.sheetsView.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
+        self.sheetsView.setWidgetResizable(True)
+        self.sheetsView.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.sheetsView.setObjectName("sheetsView")
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 988, 38))
+        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.scrollAreaWidgetContents)
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.sheetsView.setWidget(self.scrollAreaWidgetContents)
+        self.verticalLayout.addWidget(self.sheetsView)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.excelRunBtn = PushButton(ExcelInterface)
@@ -71,7 +86,7 @@ class Ui_ExcelInterface(object):
         self.websiteNameCombo.setItemText(2, _translate("ExcelInterface", "Arena"))
         self.excelRunBtn.setText(_translate("ExcelInterface", "Parse"))
 from app.components.custom_table import CustomTable
-from qfluentwidgets import ComboBox, ProgressBar, PushButton, SwitchButton
+from qfluentwidgets import ComboBox, ProgressBar, PushButton, SmoothScrollArea, SwitchButton
 
 
 if __name__ == "__main__":

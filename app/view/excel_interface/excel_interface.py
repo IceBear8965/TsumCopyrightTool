@@ -141,6 +141,8 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
     # Multithreading get results from ExcelParser worker
     def on_format_excel_result_ready(self, output):
         self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
+        self.fileCard.openButton.setEnabled(True)
+        self.excelRunBtn.setEnabled(True)
         InfoBar.success(
             title="Formatting",
             content="Excel table formatted successfully",
@@ -153,6 +155,8 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
 
     def on_parse_excel_result_ready(self, output):
         self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
+        self.fileCard.openButton.setEnabled(True)
+        self.excelRunBtn.setEnabled(True)
         InfoBar.success(
             title="Parsing",
             content="Excel table parsed successfully",
@@ -259,6 +263,8 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
                                                 Q_ARG(list, paramorder))
                 self.progressBar.setValue(0)
                 self.progressBar.setRange(0, self.max_row-1)
+                self.fileCard.openButton.setEnabled(False)
+                self.excelRunBtn.setEnabled(False)
                 InfoBar.success(
                     title="Parsing",
                     content="Parsing your table",
@@ -278,6 +284,8 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
                                                 Q_ARG(list, paramorder))
                 self.progressBar.setValue(0)
                 self.progressBar.setRange(0, self.max_row-1)
+                self.fileCard.openButton.setEnabled(False)
+                self.excelRunBtn.setEnabled(False)
                 InfoBar.success(
                     title="Formatting",
                     content="Formatting your table",

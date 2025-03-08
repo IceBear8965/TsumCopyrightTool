@@ -15,14 +15,14 @@ def sortInput(data, filters, orderfilter):
     data = [d.replace("•", "") for d in data]
     data = [d.strip() for d in data]
     order = []
-    if len(filters) > 1:
+    if len(filters) > 0:
         for f in filters:
             for d in data:
                 if f in d:
                     data.pop(data.index(d))
         data = [d.strip() for d in data]
 
-    if len(orderfilter) > 1:
+    if len(orderfilter) > 0:
         for o in orderfilter:
             for d in data:
                 if o in d:

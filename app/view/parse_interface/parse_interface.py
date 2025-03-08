@@ -40,8 +40,6 @@ class ParseInterface(Ui_ParseInterface, QWidget):
         websiteName = self.webSiteNameCombo.currentText()
         url = self.inputUrl.text()
         filters, order = getSettings()
-        print(filters)
-        print(order)
 
         if len(url) > 10:
             match websiteName:

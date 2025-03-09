@@ -14,7 +14,6 @@ PURPOSE. See the GNU General Public License for more details.
 from PyQt5.QtWidgets import QWidget, QAbstractItemView, QListView, QStyleOptionViewItem
 from PyQt5.QtCore import Qt, QItemSelectionModel, QModelIndex
 from PyQt5.QtGui import QPainter
-from adodbapi.adodbapi import getIndexedValue
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import InfoBar, InfoBarPosition, TableItemDelegate, themeColor
 

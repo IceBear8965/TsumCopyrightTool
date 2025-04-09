@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'app/view/uis/excel.ui'
+# Form implementation generated from reading ui file '/home/IceBear/projects/TsumCopyrightTool/app/view/uis/excel.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -31,6 +31,7 @@ class Ui_ExcelInterface(object):
         self.horizontalLayout.addItem(spacerItem)
         self.websiteNameCombo = ComboBox(ExcelInterface)
         self.websiteNameCombo.setObjectName("websiteNameCombo")
+        self.websiteNameCombo.addItem("")
         self.websiteNameCombo.addItem("")
         self.websiteNameCombo.addItem("")
         self.websiteNameCombo.addItem("")
@@ -84,6 +85,7 @@ class Ui_ExcelInterface(object):
         self.websiteNameCombo.setItemText(0, _translate("ExcelInterface", "Saks85"))
         self.websiteNameCombo.setItemText(1, _translate("ExcelInterface", "Saucony"))
         self.websiteNameCombo.setItemText(2, _translate("ExcelInterface", "Arena"))
+        self.websiteNameCombo.setItemText(3, _translate("ExcelInterface", "Kidis"))
         self.excelRunBtn.setText(_translate("ExcelInterface", "Parse"))
 from app.components.custom_table import CustomTable
 from qfluentwidgets import ComboBox, ProgressBar, PushButton, SmoothScrollArea, SwitchButton

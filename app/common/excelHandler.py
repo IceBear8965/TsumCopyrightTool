@@ -1,7 +1,7 @@
 import openpyxl
 
-class Excel:
 
+class Excel:
     def getData(self, file, sheet_index):
         wb = openpyxl.load_workbook(file)
         if isinstance(sheet_index, int):

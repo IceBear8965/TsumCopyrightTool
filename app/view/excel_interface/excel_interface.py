@@ -1,4 +1,4 @@
-'''
+"""
 Copyright (C) 2025 IceBear8965
 
 This program is free software: you can redistribute it and/or
@@ -9,28 +9,29 @@ any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the GNU General Public License for more details.
-'''
-from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, QObject, QThread, QMetaObject, Q_ARG
-from PyQt5.QtWidgets import QWidget, QFileDialog, QTableWidgetItem, QAbstractItemView
-from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import InfoBar, InfoBarPosition, RadioButton
-import openpyxl
+"""
+
 from pathlib import Path
 
+import openpyxl
+from PyQt5.QtCore import Q_ARG, QMetaObject, QObject, Qt, QThread, pyqtSignal, pyqtSlot
+from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QWidget
+from qfluentwidgets import InfoBar, InfoBarPosition, RadioButton
+
 from app.common.addDots import addDots
-from app.common.icon import CustomIcons
-from app.common.setting import DOWNLOAD_FOLDER, DOCUMENT_FOLDER
 from app.common.config import cfg
+from app.common.excelHandler import excelHandler
 from app.common.getSettings import getSettings
+from app.common.icon import CustomIcons
+from app.common.parsers.arenaParser import parseArena
+from app.common.parsers.kidisParser import parseKidis
 from app.common.parsers.saksParser import parseSaks
 from app.common.parsers.sauconyParser import parseSaucony
-from app.common.parsers.arenaParser import parseArena
+from app.common.saver import Saver
+from app.common.setting import DOWNLOAD_FOLDER
 from app.common.sortInput import sortInput
-from app.common.excelHandler import excelHandler
-
 from app.components.file_card import FileCard
 from app.view.excel_interface.UI_ExcelInterface import Ui_ExcelInterface
-from app.common.saver import Saver
 
 
 # Worker class for working with Excel
@@ -53,13 +54,15 @@ class ExcelParser(QObject):
         i = 1
         for source in sources:
             try:
-                match (websiteName):
+                match websiteName:
                     case "Saks85":
                         parsedData = parseSaks(source, filters, order)
                     case "Saucony":
                         parsedData = parseSaucony(source)
                     case "Arena":
                         parsedData = parseArena(source)
+                    case "Kidis":
+                        parsedData = parseKidis(source, filters, order)
             except Exception:
                 parsedData = None
             self.progress_signal.emit(i)
@@ -97,8 +100,10 @@ class ExcelParser(QObject):
         self.format_result.emit(output)
         dataWorkbook.close()
 
+
 class ExcelInterface(Ui_ExcelInterface, QWidget):
     sheetChanged = pyqtSignal(str, str)
+
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
@@ -123,7 +128,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.ExcelParser.moveToThread(self.ExcelThread)
         self.ExcelThread.start()
 
-        self.fileCard = FileCard(CustomIcons.XLSX,"Input Excel file", "", self)
+        self.fileCard = FileCard(CustomIcons.XLSX, "Input Excel file", "", self)
         self.inputFileCard.addWidget(self.fileCard)
 
         # connect signal to slots
@@ -150,7 +155,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
             isClosable=True,
             duration=2000,
             position=InfoBarPosition.TOP_RIGHT,
-            parent=self
+            parent=self,
         )
 
     def on_parse_excel_result_ready(self, output):
@@ -164,7 +169,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
             isClosable=True,
             duration=2000,
             position=InfoBarPosition.TOP_RIGHT,
-            parent=self
+            parent=self,
         )
 
     def progressUpdate(self, value):
@@ -189,7 +194,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
                 isClosable=True,
                 duration=2000,
                 position=InfoBarPosition.BOTTOM_RIGHT,
-                parent=self
+                parent=self,
             )
 
     def setSheets(self, file):
@@ -247,22 +252,22 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
             columnIndex = column[0].column()
         filters, paramorder = getSettings()
 
-
-
-        if isinstance(columnIndex, int) and excel_file != "" and len(
-                excel_file) > 10 and file_extension == ".xlsx":
+        if isinstance(columnIndex, int) and excel_file != "" and len(excel_file) > 10 and file_extension == ".xlsx":
             if self.useUrlToggle.isChecked():
                 # Отправка в поток параметры подключения
-                QMetaObject.invokeMethod(self.ExcelParser, 'parseExcelInThread',
-                                                Qt.ConnectionType.QueuedConnection,
-                                                Q_ARG(str, excel_file),
-                                                Q_ARG(str, self.current_sheet),
-                                                Q_ARG(int, columnIndex),
-                                                Q_ARG(str, websiteName),
-                                                Q_ARG(list, filters),
-                                                Q_ARG(list, paramorder))
+                QMetaObject.invokeMethod(
+                    self.ExcelParser,
+                    "parseExcelInThread",
+                    Qt.ConnectionType.QueuedConnection,
+                    Q_ARG(str, excel_file),
+                    Q_ARG(str, self.current_sheet),
+                    Q_ARG(int, columnIndex),
+                    Q_ARG(str, websiteName),
+                    Q_ARG(list, filters),
+                    Q_ARG(list, paramorder),
+                )
                 self.progressBar.setValue(0)
-                self.progressBar.setRange(0, self.max_row-1)
+                self.progressBar.setRange(0, self.max_row - 1)
                 self.fileCard.openButton.setEnabled(False)
                 self.excelRunBtn.setEnabled(False)
                 InfoBar.success(
@@ -272,18 +277,21 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
                     isClosable=True,
                     duration=2000,
                     position=InfoBarPosition.TOP_RIGHT,
-                    parent=self
+                    parent=self,
                 )
             else:
-                QMetaObject.invokeMethod(self.ExcelParser, 'formatExcelInThread',
-                                                Qt.ConnectionType.QueuedConnection,
-                                                Q_ARG(str, excel_file),
-                                                Q_ARG(str, self.current_sheet),
-                                                Q_ARG(int, columnIndex),
-                                                Q_ARG(list, filters),
-                                                Q_ARG(list, paramorder))
+                QMetaObject.invokeMethod(
+                    self.ExcelParser,
+                    "formatExcelInThread",
+                    Qt.ConnectionType.QueuedConnection,
+                    Q_ARG(str, excel_file),
+                    Q_ARG(str, self.current_sheet),
+                    Q_ARG(int, columnIndex),
+                    Q_ARG(list, filters),
+                    Q_ARG(list, paramorder),
+                )
                 self.progressBar.setValue(0)
-                self.progressBar.setRange(0, self.max_row-1)
+                self.progressBar.setRange(0, self.max_row - 1)
                 self.fileCard.openButton.setEnabled(False)
                 self.excelRunBtn.setEnabled(False)
                 InfoBar.success(
@@ -293,7 +301,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
                     isClosable=True,
                     duration=2000,
                     position=InfoBarPosition.TOP_RIGHT,
-                    parent=self
+                    parent=self,
                 )
         else:
             InfoBar.warning(
@@ -303,5 +311,5 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
                 isClosable=True,
                 duration=2000,
                 position=InfoBarPosition.TOP_RIGHT,
-                parent=self
+                parent=self,
             )

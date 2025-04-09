@@ -1,4 +1,4 @@
-'''
+"""
 Copyright (C) 2025 IceBear8965
 
 This program is free software: you can redistribute it and/or
@@ -9,21 +9,22 @@ any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the GNU General Public License for more details.
-'''
+"""
 
-from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QWidget
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import InfoBar, InfoBarPosition
-from app.view.parse_interface.UI_ParseInterface import Ui_ParseInterface
 
 from app.common.getSettings import getSettings
+from app.common.parsers.arenaParser import parseArena
+from app.common.parsers.kidisParser import parseKidis
 from app.common.parsers.saksParser import parseSaks
 from app.common.parsers.sauconyParser import parseSaucony
-from app.common.parsers.arenaParser import parseArena
+from app.view.parse_interface.UI_ParseInterface import Ui_ParseInterface
+
 
 class ParseInterface(Ui_ParseInterface, QWidget):
-
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
@@ -55,9 +56,8 @@ class ParseInterface(Ui_ParseInterface, QWidget):
                             isClosable=True,
                             duration=2000,
                             position=InfoBarPosition.BOTTOM_RIGHT,
-                            parent=self
+                            parent=self,
                         )
-            match websiteName:
                 case "Saucony":
                     try:
                         output = parseSaucony(url)
@@ -70,9 +70,8 @@ class ParseInterface(Ui_ParseInterface, QWidget):
                             isClosable=True,
                             duration=2000,
                             position=InfoBarPosition.BOTTOM_RIGHT,
-                            parent=self
+                            parent=self,
                         )
-            match websiteName:
                 case "Arena":
                     try:
                         output = parseArena(url)
@@ -85,7 +84,21 @@ class ParseInterface(Ui_ParseInterface, QWidget):
                             isClosable=True,
                             duration=2000,
                             position=InfoBarPosition.BOTTOM_RIGHT,
-                            parent=self
+                            parent=self,
+                        )
+                case "Kidis":
+                    try:
+                        output = parseKidis(url, filters, order)
+                        self.parsedOutput.setPlainText(output)
+                    except Exception:
+                        InfoBar.error(
+                            title="Error",
+                            content="Something went wrong",
+                            orient=Qt.Horizontal,
+                            isClosable=True,
+                            duration=2000,
+                            position=InfoBarPosition.BOTTOM_RIGHT,
+                            parent=self,
                         )
         else:
             InfoBar.warning(
@@ -95,7 +108,7 @@ class ParseInterface(Ui_ParseInterface, QWidget):
                 isClosable=True,
                 duration=2000,
                 position=InfoBarPosition.BOTTOM_RIGHT,
-                parent=self
+                parent=self,
             )
         self.inputUrl.clear()
 
@@ -109,7 +122,7 @@ class ParseInterface(Ui_ParseInterface, QWidget):
                 isClosable=True,
                 duration=1000,
                 position=InfoBarPosition.BOTTOM_RIGHT,
-                parent=self
+                parent=self,
             )
         else:
             InfoBar.warning(
@@ -119,5 +132,5 @@ class ParseInterface(Ui_ParseInterface, QWidget):
                 isClosable=True,
                 duration=2000,
                 position=InfoBarPosition.BOTTOM_RIGHT,
-                parent=self
+                parent=self,
             )

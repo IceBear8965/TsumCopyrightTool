@@ -1,4 +1,4 @@
-'''
+"""
 Copyright (C) 2025 IceBear8965
 
 This program is free software: you can redistribute it and/or
@@ -9,18 +9,21 @@ any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the GNU General Public License for more details.
-'''
+"""
 
+import lxml  # noqa: F401
 import requests
-from bs4 import  BeautifulSoup
-import lxml
+from bs4 import BeautifulSoup
+
 from app.common.addDots import addDots
 from app.common.sortInput import sortInput
 
 headers = {
     "accept": "*/*",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
 }
+
+
 def parseSaks(url, filters, order):
     html = requests.get(url, headers)
     src = html.text

@@ -1,44 +1,23 @@
 from PyQt5.QtCore import QAbstractListModel, Qt
 
+
 class PresetModel(QAbstractListModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.dataList = [0, []]
+        self.presetsData = {}
 
     def data(self, index, role):
         if role == Qt.DisplayRole:
-            if len(self.dataList[1]) != 0:
-                key, filters, order = self.dataList[1][index.row()]
-                return key
+            return list(self.presetsData.get("presets").keys())[index.row()]  # pyright: ignore
 
     def rowCount(self, index):
-        return len(self.dataList[1])
+        return len(self.presetsData.get("presets").keys())  # pyright: ignore
 
-    def setActiveIndex(self, index):
-        if index != self.dataList[0]:
-            self.dataList[0] = index
+    def getPresetsObj(self) -> dict:
+        return self.presetsData.get("presets", dict())
 
-    def getActiveIndex(self):
-        return self.dataList[0]
+    def getCurrentPreset(self) -> str:
+        return self.presetsData.get("current", dict())
 
-    def getActivePreset(self):
-        if len(self.dataList[1]) != 0:
-            return self.dataList[1][self.getActiveIndex()]
-        else:
-            return []
-
-    def getPresets(self):
-        return self.dataList[1]
-
-    def delPreset(self, index):
-        self.dataList[1].pop(self.dataList[1].index(self.dataList[1][index]))
-
-    def getParams(self):
-        if len(self.getActivePreset()) != 0:
-            filters = self.getActivePreset()[1].split("\n")
-            order = self.getActivePreset()[2].split("\n")
-            return filters, order
-        else:
-            return [], []
 
 presetModel = PresetModel()

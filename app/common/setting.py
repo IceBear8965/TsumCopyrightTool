@@ -1,4 +1,4 @@
-'''
+"""
 Copyright (C) 2025 IceBear8965
 
 This program is free software: you can redistribute it and/or
@@ -9,10 +9,10 @@ any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the GNU General Public License for more details.
-'''
+"""
 
-import sys
 from pathlib import Path
+
 from PyQt5.QtCore import QStandardPaths
 
 YEAR = 2025
@@ -24,7 +24,8 @@ RELEASE_URL = "https://github.com/zhiyiYo/Fluent-M3U8/releases"
 
 CONFIG_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.AppLocalDataLocation)) / APP_NAME
 CONFIG_FILE = CONFIG_FOLDER / "config.json"
-SETTING_FILE = CONFIG_FOLDER / "setting.json"
+# SETTING_FILE = CONFIG_FOLDER / "setting.json"
+SETTING_FILE = "setting.json"
 
 DOCUMENT_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.DocumentsLocation))
 DOWNLOAD_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.DownloadLocation))

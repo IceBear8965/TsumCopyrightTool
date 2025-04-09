@@ -1,7 +1,7 @@
-import openpyxl
 import json
-from qfluentwidgets import InfoBar, InfoBarPosition
-from PyQt5.QtCore import Qt
+
+import openpyxl
+
 
 class Saver:
     def save(self, data, file_name):
@@ -18,7 +18,6 @@ class Saver:
                 return data
         except Exception:
             return False
-
 
     def saveToExcel(self, output, output_folder):
         outputWorkbook = openpyxl.Workbook(write_only=True)

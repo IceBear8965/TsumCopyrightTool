@@ -4,12 +4,12 @@ import openpyxl
 
 
 class Saver:
-    def save(self, data, file_name):
+    def save(self, file_name, data):
         try:
             with open(file_name, "w", encoding="utf-8") as file:
                 json.dump(data, file, ensure_ascii=False)
         except Exception:
-            pass
+            return False
 
     def load(self, file_name):
         try:

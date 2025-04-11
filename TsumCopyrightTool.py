@@ -1,4 +1,4 @@
-'''
+"""
 Copyright (C) 2025 IceBear8965
 
 This program is free software: you can redistribute it and/or
@@ -9,14 +9,14 @@ any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the GNU General Public License for more details.
-'''
+"""
 
-import sys, os
-from PyQt5.QtWidgets import QApplication
+import sys
+
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication
 
 from app.view.main_window import MainWindow
-
 
 # enable dpi scale
 

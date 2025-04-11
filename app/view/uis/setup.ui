@@ -42,7 +42,14 @@
           </layout>
          </item>
          <item alignment="Qt::AlignTop">
-          <widget class="ListView" name="presetList"/>
+          <widget class="ListView" name="presetList">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>130</height>
+            </size>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -88,7 +95,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>10</height>
+         <height>5</height>
         </size>
        </property>
       </spacer>
@@ -97,6 +104,12 @@
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="PlainTextEdit" name="filtersEdit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="placeholderText">
           <string>Filters</string>
          </property>

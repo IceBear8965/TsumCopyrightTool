@@ -66,21 +66,70 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
         self.saver = Saver()
         self.savedData = self.saver.load(SETTING_FILE)
 
-        if not isinstance(self.savedData, bool):
+        if not isinstance(self.savedData, bool) and not isinstance(self.savedData, list):
             presetModel.presetsData = self.savedData
 
             # Visual selection of item in "current"
             if presetModel.getCurrentPreset() != "":
-                self.presetList.setCurrentIndex(
-                    presetModel.index(  # Преобразовываем значение из int в QModelIndex
-                        list(presetModel.getPresetsObj().keys()).index(
-                            presetModel.getCurrentPreset()
-                        )  # Получаем спискок из всех имен прессетов, находим нужный прессет по свойству из поля current
-                    )
-                )
+                self.presetList.setCurrentIndex(presetModel.index(presetModel.getCurrentPressetIndex()))
                 self.setRelevantFields()
         else:
             presetModel.presetsData = self.presetsData
+            self.saver.save(SETTING_FILE, presetModel.presetsData)
+
+        # connect signals to slots
+        self.addPresetBtn.clicked.connect(self.addBtnHandler)
+        self.delPresetBtn.clicked.connect(self.delBtnHandler)
+        self.selectionModel.currentChanged.connect(self.changeSelectionHandler)
+        self.savePresetBtn.clicked.connect(self.saveBtnHandler)
+
+    def addBtnHandler(self):
+        name = self.presetNameEdit.text()
+        if len(name) != 0:
+            presetModel.getPresetsObj().update(
+                {
+                    name: {
+                        "filters": "",
+                        "order": "",
+                    }
+                }
+            )
+            lastElement = presetModel.index(list(presetModel.getPresetsObj()).index(name))
+            self.presetList.setCurrentIndex(lastElement)
+            self.presetNameEdit.clear()
+            presetModel.presetsData["current"] = name
+            self.setRelevantFields()
+            presetModel.layoutChanged.emit()
+
+            self.saver.save(SETTING_FILE, presetModel.presetsData)
+
+    def delBtnHandler(self):
+        if len(self.presetList.selectedIndexes()) > 0:
+            if len(list(presetModel.getPresetsObj().keys())) > 1:
+                selectedIndex = self.presetList.selectedIndexes()[0].row()
+                presetModel.getPresetsObj().pop(list(presetModel.getPresetsObj().keys())[selectedIndex])
+                presetModel.presetsData["current"] = ""
+                self.filtersEdit.clear()
+                self.orderEdit.clear()
+                self.presetList.clearSelection()
+                self.saver.save(SETTING_FILE, presetModel.presetsData)
+                presetModel.layoutChanged.emit()
+
+    def changeSelectionHandler(self, selected):
+        selectedIndex = selected.row()
+        selectedElement = list(presetModel.getPresetsObj().keys())[selectedIndex]
+        presetModel.presetsData["current"] = selectedElement
+        self.presetList.setCurrentIndex(presetModel.index(selectedIndex))
+        self.setRelevantFields()
+        self.saver.save(SETTING_FILE, presetModel.presetsData)
+
+    def saveBtnHandler(self):
+        preset = presetModel.getPresetsObj().get(presetModel.getCurrentPreset())
+        filters = self.filtersEdit.toPlainText()
+        order = self.orderEdit.toPlainText()
+        preset["filters"] = filters
+        preset["order"] = order
+        self.saver.save(SETTING_FILE, presetModel.presetsData)
 
     def setRelevantFields(self):
         preset = presetModel.getCurrentPreset()
@@ -89,5 +138,3 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
 
         self.filtersEdit.setPlainText(filters)
         self.orderEdit.setPlainText(order)
-
-        # connect signal to slots

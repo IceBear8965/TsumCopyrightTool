@@ -19,5 +19,9 @@ class PresetModel(QAbstractListModel):
     def getCurrentPreset(self) -> str:
         return self.presetsData.get("current", dict())
 
+    def getCurrentPressetIndex(self):
+        currentPressetIndex = list(self.getPresetsObj().keys()).index(self.getCurrentPreset())
+        return currentPressetIndex
+
 
 presetModel = PresetModel()

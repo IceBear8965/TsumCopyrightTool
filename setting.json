@@ -1,7 +1,0 @@
-{
-  "current": "test1",
-  "presets": {
-    "test1": { "filters": "", "order": "" },
-    "test2": { "filters": "", "order": "" }
-  }
-}

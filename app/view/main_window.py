@@ -1,4 +1,4 @@
-'''
+"""
 Copyright (C) 2025 IceBear8965
 
 This program is free software: you can redistribute it and/or
@@ -9,15 +9,24 @@ any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the GNU General Public License for more details.
-'''
+"""
 
 import os
 from PyQt5.QtGui import QIcon, QDesktopServices, QColor
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication
 
-from qfluentwidgets import (NavigationAvatarWidget, NavigationItemPosition, MessageBox, FluentWindow,
-                            SplashScreen, SystemThemeListener, isDarkTheme, setTheme, Theme)
+from qfluentwidgets import (
+    NavigationAvatarWidget,
+    NavigationItemPosition,
+    MessageBox,
+    FluentWindow,
+    SplashScreen,
+    SystemThemeListener,
+    isDarkTheme,
+    setTheme,
+    Theme,
+)
 from qfluentwidgets import FluentIcon as FIF
 
 from app.common.presetModel import presetModel
@@ -33,6 +42,7 @@ from app.view.setup_interface.setup_interface import SetupInterface
 from app.view.setting_interface.setting_interface import SettingInterface
 
 basedir = os.path.dirname(__file__)
+
 
 class MainWindow(FluentWindow):
     def __init__(self):
@@ -56,7 +66,7 @@ class MainWindow(FluentWindow):
     def initWindow(self):
         self.resize(860, 680)
         self.setMinimumWidth(760)
-        self.setWindowTitle('Tsum Copyright Tool')
+        self.setWindowTitle("Tsum Copyright Tool")
         self.setWindowIcon(QIcon(os.path.join(basedir, "../resources/images/tsumlogo.ico")))
         self.setObjectName("mainWindow")
 

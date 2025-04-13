@@ -21,7 +21,6 @@ def sortInput(data, filters, orderfilter):
             for d in data:
                 if f in d:
                     data.pop(data.index(d))
-        data = [d.strip() for d in data]
 
     if len(orderfilter) > 0:
         for o in orderfilter:

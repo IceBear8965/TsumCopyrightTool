@@ -1,4 +1,4 @@
-'''
+"""
 Copyright (C) 2025 IceBear8965
 
 This program is free software: you can redistribute it and/or
@@ -9,7 +9,7 @@ any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the GNU General Public License for more details.
-'''
+"""
 
 from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QHBoxLayout
 from PyQt5.QtCore import Qt
@@ -18,7 +18,6 @@ from qfluentwidgets import InfoBar, InfoBarPosition
 
 from app.common.addDots import addDots
 from app.common.sortInput import sortInput
-from app.common.getSettings import getSettings
 from app.view.sort_interface.UI_SortInterface import Ui_SortInterface
 
 
@@ -57,13 +56,13 @@ class SortInterface(Ui_SortInterface, QWidget):
                     isClosable=True,
                     duration=2000,
                     position=InfoBarPosition.BOTTOM_RIGHT,
-                    parent=self
+                    parent=self,
                 )
         else:
             if len(sortdata) > 1:
                 data = []
                 for i in sortdata:
-                    if i != '':
+                    if i != "":
                         data.append(i.strip())
 
                 if len(data) != 0:
@@ -78,7 +77,7 @@ class SortInterface(Ui_SortInterface, QWidget):
                     isClosable=True,
                     duration=2000,
                     position=InfoBarPosition.BOTTOM_RIGHT,
-                    parent=self
+                    parent=self,
                 )
 
     def copyToClipboard(self):
@@ -91,7 +90,7 @@ class SortInterface(Ui_SortInterface, QWidget):
                 isClosable=True,
                 duration=1000,
                 position=InfoBarPosition.BOTTOM_RIGHT,
-                parent=self
+                parent=self,
             )
         else:
             InfoBar.warning(
@@ -101,5 +100,5 @@ class SortInterface(Ui_SortInterface, QWidget):
                 isClosable=True,
                 duration=2000,
                 position=InfoBarPosition.BOTTOM_RIGHT,
-                parent=self
+                parent=self,
             )

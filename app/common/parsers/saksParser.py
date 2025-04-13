@@ -20,7 +20,7 @@ from app.common.sortInput import sortInput
 
 headers = {
     "accept": "*/*",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",  # noqa E501
 }
 
 
@@ -33,8 +33,9 @@ def parseSaks(url, filters, order):
     htmlData = soup.find("div", class_="product__description").find_all("div")
     data = []
 
+    # Проверка на пустые поля в <div></div>
     for d in htmlData:
-        if len(d.text) > 5:
+        if len(d.text) > 2:
             data.append(d.text)
 
     for d in data:

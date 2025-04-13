@@ -21,7 +21,6 @@ from qfluentwidgets import InfoBar, InfoBarPosition, RadioButton
 from app.common.addDots import addDots
 from app.common.config import cfg
 from app.common.excelHandler import excelHandler
-from app.common.getSettings import getSettings
 from app.common.icon import CustomIcons
 from app.common.parsers.arenaParser import parseArena
 from app.common.parsers.kidisParser import parseKidis

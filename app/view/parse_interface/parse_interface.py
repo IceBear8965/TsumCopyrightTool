@@ -16,11 +16,11 @@ from PyQt5.QtWidgets import QApplication, QWidget
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import InfoBar, InfoBarPosition
 
-from app.common.getSettings import getSettings
 from app.common.parsers.arenaParser import parseArena
 from app.common.parsers.kidisParser import parseKidis
 from app.common.parsers.saksParser import parseSaks
 from app.common.parsers.sauconyParser import parseSaucony
+from app.common.presetModel import presetModel
 from app.view.parse_interface.UI_ParseInterface import Ui_ParseInterface
 
 
@@ -40,7 +40,7 @@ class ParseInterface(Ui_ParseInterface, QWidget):
         global output
         websiteName = self.webSiteNameCombo.currentText()
         url = self.inputUrl.text()
-        filters, order = getSettings()
+        filters, order = presetModel.getSetting()
 
         if len(url) > 10:
             match websiteName:

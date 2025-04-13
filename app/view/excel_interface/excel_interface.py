@@ -19,6 +19,7 @@ from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QWidget
 from qfluentwidgets import InfoBar, InfoBarPosition, RadioButton
 
 from app.common.addDots import addDots
+from app.common.presetModel import presetModel
 from app.common.config import cfg
 from app.common.excelHandler import excelHandler
 from app.common.icon import CustomIcons
@@ -249,7 +250,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         file_extension = Path(excel_file).suffix
         if len(column) > 0:
             columnIndex = column[0].column()
-        filters, paramorder = getSettings()
+        filters, paramorder = presetModel.getSetting()
 
         if isinstance(columnIndex, int) and excel_file != "" and len(excel_file) > 10 and file_extension == ".xlsx":
             if self.useUrlToggle.isChecked():

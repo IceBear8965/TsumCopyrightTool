@@ -18,6 +18,7 @@ from qfluentwidgets import InfoBar, InfoBarPosition
 
 from app.common.addDots import addDots
 from app.common.sortInput import sortInput
+from app.common.presetModel import presetModel
 from app.view.sort_interface.UI_SortInterface import Ui_SortInterface
 
 
@@ -39,7 +40,7 @@ class SortInterface(Ui_SortInterface, QWidget):
 
     def sorting(self):
         useFilters = self.useFiltersToggle.isChecked()
-        filters, order = getSettings()
+        filters, order = presetModel.getSetting()
         sortdata = self.sortTextInput.toPlainText().split("\n")
 
         if useFilters:

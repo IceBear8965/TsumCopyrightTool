@@ -41,7 +41,7 @@ The main goal is to reduce the time spent on tedious work with text.
 
 ## License
 
-TsumCopyrightToll is licensed under [GPLv3](./LICENSE).
+TsumCopyrightTool is licensed under [GPLv3](./LICENSE).
 
 Copyright © 2025 by IceBear8965.
 

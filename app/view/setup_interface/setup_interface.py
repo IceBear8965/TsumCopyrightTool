@@ -11,11 +11,11 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
 PURPOSE. See the GNU General Public License for more details.
 """
 
-from PyQt5.QtCore import QModelIndex
+from PyQt5.QtCore import QModelIndex, Qt
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QAbstractItemView, QListView, QStyleOptionViewItem, QWidget
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import TableItemDelegate, themeColor
+from qfluentwidgets import TableItemDelegate, themeColor, InfoBar, InfoBarPosition
 
 from app.common.presetModel import presetModel
 from app.common.saver import Saver
@@ -123,13 +123,43 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
         self.setRelevantFields()
         self.saver.save(SETTING_FILE, presetModel.presetsData)
 
+        InfoBar.success(
+            title="Change",
+            content="Active preset changed",
+            orient=Qt.Horizontal,
+            isClosable=True,
+            duration=500,
+            position=InfoBarPosition.TOP_RIGHT,
+            parent=self,
+        )
+
     def saveBtnHandler(self):
-        preset = presetModel.getPresetsObj().get(presetModel.getCurrentPreset())
-        filters = self.filtersEdit.toPlainText()
-        order = self.orderEdit.toPlainText()
-        preset["filters"] = filters
-        preset["order"] = order
-        self.saver.save(SETTING_FILE, presetModel.presetsData)
+        try:
+            preset = presetModel.getPresetsObj().get(presetModel.getCurrentPreset())
+            filters = self.filtersEdit.toPlainText()
+            order = self.orderEdit.toPlainText()
+            preset["filters"] = filters
+            preset["order"] = order
+            self.saver.save(SETTING_FILE, presetModel.presetsData)
+            InfoBar.success(
+                title="Save",
+                content="Preset saved successfully",
+                orient=Qt.Horizontal,
+                isClosable=True,
+                duration=2000,
+                position=InfoBarPosition.TOP_RIGHT,
+                parent=self,
+            )
+        except Exception:
+            InfoBar.error(
+                title="Error",
+                content="An error occurred while recording the preset",
+                orient=Qt.Horizontal,
+                isClosable=True,
+                duration=2000,
+                position=InfoBarPosition.TOP_RIGHT,
+                parent=self,
+            )
 
     def setRelevantFields(self):
         preset = presetModel.getCurrentPreset()

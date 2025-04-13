@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\app\view\uis\sort.ui'
+# Form implementation generated from reading ui file '/home/IceBear/projects/TsumCopyrightTool/app/view/uis/sort.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -41,7 +41,7 @@ class Ui_SortInterface(object):
         self.horizontalLayout_2.addWidget(self.sortBtn, 0, QtCore.Qt.AlignLeft)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.sortedOutput = PlainTextEdit(SortInterface)
-        self.sortedOutput.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
+        self.sortedOutput.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse|QtCore.Qt.TextSelectableByMouse)
         self.sortedOutput.setObjectName("sortedOutput")
         self.verticalLayout.addWidget(self.sortedOutput)
         self.copySortedBtn = PushButton(SortInterface)

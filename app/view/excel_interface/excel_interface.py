@@ -229,6 +229,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
             if self.useUrlToggle.isChecked():  # парсинг
                 self.fileCard.openButton.setEnabled(False)
                 self.excelRunBtn.setEnabled(False)
+                self.useUrlToggle.setEnabled(False)
                 self.toggleSheetSelection()
                 QMetaObject.invokeMethod(
                     self.ExcelParser,
@@ -254,6 +255,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
             else:  # форматирование
                 self.fileCard.openButton.setEnabled(False)
                 self.excelRunBtn.setEnabled(False)
+                self.useUrlToggle.setEnabled(False)
                 self.toggleSheetSelection()
                 QMetaObject.invokeMethod(
                     self.ExcelParser,
@@ -291,6 +293,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
         self.fileCard.openButton.setEnabled(True)
         self.excelRunBtn.setEnabled(True)
+        self.useUrlToggle.setEnabled(True)
         self.toggleSheetSelection()
         InfoBar.success(
             title="Formatting",
@@ -306,6 +309,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
         self.fileCard.openButton.setEnabled(True)
         self.excelRunBtn.setEnabled(True)
+        self.useUrlToggle.setEnabled(True)
         self.toggleSheetSelection()
         InfoBar.success(
             title="Parsing",

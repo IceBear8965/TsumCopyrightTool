@@ -40,15 +40,14 @@ class ExcelParser(QObject):
     parse_result = pyqtSignal(list)
     progress_signal = pyqtSignal(int)
 
-    @pyqtSlot(str, str, int, str, list, list)
-    def parseExcelInThread(self, excel_file, excel_sheet, columnIndex, websiteName, filters, order):
-        global parsedData
-        dataWorkbook = openpyxl.load_workbook(excel_file)
-        dataWorksheet = dataWorkbook[excel_sheet]
-
+    @pyqtSlot(list, int, list, list, str)
+    def parseExcelInThread(self, values, columnIndex, filters, order, websiteName):
         sources = []
-        for c in list(dataWorksheet.values):
-            sources.append(c[columnIndex])
+        for value in values:
+            try:
+                sources.append(value[columnIndex])
+            except IndexError:
+                sources.append(None)
 
         data = []
         i = 1
@@ -64,41 +63,35 @@ class ExcelParser(QObject):
                     case "Kidis":
                         parsedData = parseKidis(source, filters, order)
             except Exception:
-                parsedData = None
+                parsedData = source
+            data.append(parsedData)
             self.progress_signal.emit(i)
             i += 1
-            data.append(parsedData)
 
         self.parse_result.emit(data)
-        dataWorkbook.close()
 
-    @pyqtSlot(str, str, int, list, list)
-    def formatExcelInThread(self, excel_file, excel_sheet, columnIndex, filters, order):
-        dataWorkbook = openpyxl.load_workbook(excel_file)
-        dataWorksheet = dataWorkbook[excel_sheet]
-
+    @pyqtSlot(list, int, list, list)
+    def formatExcelInThread(self, values, columnIndex, filters, order):
         data = []
-        for c in list(dataWorksheet.values):
-            data.append(c[columnIndex])
-
-        sortData = []
-        for d in data:
-            if d is not None:
-                sortData.append(d)
-        firstItem = sortData.pop(0)
+        for value in values:
+            try:
+                data.append(value[columnIndex])
+            except IndexError:
+                data.append(None)
 
         output = []
         i = 1
-        for d in sortData:
-            sorted = sortInput(d.split("\n"), filters, order)
-            dotted = addDots(sorted)
-            output.append(dotted)
+        for value in data:
+            try:
+                sorted = sortInput(value.split("\n"), filters, order)
+                dotted = addDots(sorted)
+                output.append(dotted)
+            except Exception:
+                output.append(value)
             self.progress_signal.emit(i)
             i += 1
-        output.insert(0, firstItem)
 
         self.format_result.emit(output)
-        dataWorkbook.close()
 
 
 class ExcelInterface(Ui_ExcelInterface, QWidget):
@@ -110,6 +103,8 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.current_workbook = None
         self.current_sheet = ""
         self.current_values = []
+        self.max_row = 0
+
         self.setObjectName("excelInterface")
         self.toggleUrlParsing()
         self.tablePreview.verticalHeader().show()
@@ -141,8 +136,10 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
     def toggleUrlParsing(self):
         if self.useUrlToggle.isChecked():
             self.websiteNameCombo.setEnabled(True)
+            self.excelRunBtn.setText("Parse")
         else:
             self.websiteNameCombo.setEnabled(False)
+            self.excelRunBtn.setText("Format")
 
     def getExcelFile(self):
         excel_file, _ = QFileDialog.getOpenFileName(self, "Open file", str(DOWNLOAD_FOLDER), "Excel files (*.xlsx)")
@@ -152,11 +149,12 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
             self.tablePreview.clearSelection()
             wb = openpyxl.load_workbook(excel_file, read_only=True)
             self.current_workbook = wb
-            ws = wb.active
+            ws = wb.worksheets[0]
             values, max_row, max_column = excelHandler.getData(ws)
             self.loadExcelTable(values, max_row, max_column)
             self.setSheets(wb)
             self.current_values = values
+            self.max_row = max_row
         else:
             InfoBar.warning(
                 title="Error",
@@ -182,6 +180,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
 
     def loadExcelTable(self, values, max_row, max_column):
         self.current_values = values
+        self.max_row = max_row
         self.tablePreview.setRowCount(max_row)
         self.tablePreview.setColumnCount(max_column)
         for i in range(max_column):
@@ -206,6 +205,11 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
             values, max_row, max_column = excelHandler.getData(self.current_sheet)
             self.sheetChanged.emit(values, max_row, max_column)
 
+    def toggleSheetSelection(self):
+        for btn in reversed(range(self.horizontalLayout_3.count())):
+            btn_widget_state = self.horizontalLayout_3.itemAt(btn).widget().isEnabled()
+            self.horizontalLayout_3.itemAt(btn).widget().setEnabled(not btn_widget_state)
+
     # removing sheets in scroll area when new file is uploaded
     def onNewFileLoaded(self):
         for i in reversed(range(self.horizontalLayout_3.count())):
@@ -213,33 +217,31 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
 
     # Write data to Excel file
     def processExcel(self):
-        excel_file = self.fileCard.contentLabel.text()
         column = self.tablePreview.selectedItems()
         websiteName = self.websiteNameCombo.currentText()
         columnIndex = None
-        file_extension = Path(excel_file).suffix
         if len(column) > 0:
             columnIndex = column[0].column()
         filters, paramorder = presetModel.getSetting()
 
-        if isinstance(columnIndex, int) and excel_file != "" and len(excel_file) > 10 and file_extension == ".xlsx":
+        # Отправка в поток-обработчик
+        if isinstance(columnIndex, int) and self.current_values != []:
             if self.useUrlToggle.isChecked():  # парсинг
-                # Отправка в поток-обработчик
+                self.fileCard.openButton.setEnabled(False)
+                self.excelRunBtn.setEnabled(False)
+                self.toggleSheetSelection()
                 QMetaObject.invokeMethod(
                     self.ExcelParser,
                     "parseExcelInThread",
                     Qt.ConnectionType.QueuedConnection,
-                    Q_ARG(str, excel_file),
-                    Q_ARG(str, self.current_sheet),
+                    Q_ARG(list, self.current_values),
                     Q_ARG(int, columnIndex),
-                    Q_ARG(str, websiteName),
                     Q_ARG(list, filters),
                     Q_ARG(list, paramorder),
+                    Q_ARG(str, websiteName),
                 )
                 self.progressBar.setValue(0)
-                self.progressBar.setRange(0, self.max_row - 1)
-                self.fileCard.openButton.setEnabled(False)
-                self.excelRunBtn.setEnabled(False)
+                self.progressBar.setRange(0, self.max_row)
                 InfoBar.success(
                     title="Parsing",
                     content="Parsing your table",
@@ -250,20 +252,20 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
                     parent=self,
                 )
             else:  # форматирование
+                self.fileCard.openButton.setEnabled(False)
+                self.excelRunBtn.setEnabled(False)
+                self.toggleSheetSelection()
                 QMetaObject.invokeMethod(
                     self.ExcelParser,
                     "formatExcelInThread",
                     Qt.ConnectionType.QueuedConnection,
-                    Q_ARG(str, excel_file),
-                    Q_ARG(str, self.current_sheet),
+                    Q_ARG(list, self.current_values),
                     Q_ARG(int, columnIndex),
                     Q_ARG(list, filters),
                     Q_ARG(list, paramorder),
                 )
                 self.progressBar.setValue(0)
-                self.progressBar.setRange(0, self.max_row - 1)
-                self.fileCard.openButton.setEnabled(False)
-                self.excelRunBtn.setEnabled(False)
+                self.progressBar.setRange(0, self.max_row)
                 InfoBar.success(
                     title="Formatting",
                     content="Formatting your table",
@@ -289,6 +291,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
         self.fileCard.openButton.setEnabled(True)
         self.excelRunBtn.setEnabled(True)
+        self.toggleSheetSelection()
         InfoBar.success(
             title="Formatting",
             content="Excel table formatted successfully",
@@ -303,6 +306,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
         self.fileCard.openButton.setEnabled(True)
         self.excelRunBtn.setEnabled(True)
+        self.toggleSheetSelection()
         InfoBar.success(
             title="Parsing",
             content="Excel table parsed successfully",

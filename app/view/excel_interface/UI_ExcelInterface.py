@@ -24,6 +24,7 @@ class Ui_ExcelInterface(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.useUrlToggle = SwitchButton(ExcelInterface)
+        self.useUrlToggle.setMinimumSize(QtCore.QSize(220, 0))
         self.useUrlToggle.setText("")
         self.useUrlToggle.setObjectName("useUrlToggle")
         self.horizontalLayout.addWidget(self.useUrlToggle, 0, QtCore.Qt.AlignLeft)
@@ -52,7 +53,7 @@ class Ui_ExcelInterface(object):
         self.sheetsView.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.sheetsView.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
         self.sheetsView.setWidgetResizable(True)
-        self.sheetsView.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.sheetsView.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
         self.sheetsView.setObjectName("sheetsView")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 988, 38))
@@ -65,8 +66,9 @@ class Ui_ExcelInterface(object):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.excelRunBtn = PushButton(ExcelInterface)
+        self.excelRunBtn.setMinimumSize(QtCore.QSize(110, 0))
         self.excelRunBtn.setObjectName("excelRunBtn")
-        self.horizontalLayout_2.addWidget(self.excelRunBtn, 0, QtCore.Qt.AlignLeft)
+        self.horizontalLayout_2.addWidget(self.excelRunBtn)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem2)
         self.progressBar = ProgressBar(ExcelInterface)
@@ -87,12 +89,15 @@ class Ui_ExcelInterface(object):
         self.websiteNameCombo.setItemText(2, _translate("ExcelInterface", "Arena"))
         self.websiteNameCombo.setItemText(3, _translate("ExcelInterface", "Kidis"))
         self.excelRunBtn.setText(_translate("ExcelInterface", "Parse"))
+
+
 from app.components.custom_table import CustomTable
 from qfluentwidgets import ComboBox, ProgressBar, PushButton, SmoothScrollArea, SwitchButton
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     ExcelInterface = QtWidgets.QWidget()
     ui = Ui_ExcelInterface()

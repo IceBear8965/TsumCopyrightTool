@@ -179,6 +179,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         # horizontalLayout_3 -- лейаут в scrollArea, хрен знает как переименовать его из дизайнера
 
     def loadExcelTable(self, values, max_row, max_column):
+        self.tablePreview.clear()
         self.current_values = values
         self.max_row = max_row
         self.tablePreview.setRowCount(max_row)

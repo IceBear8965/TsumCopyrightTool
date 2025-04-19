@@ -87,7 +87,7 @@ class MainWindow(FluentWindow):
         self.addSubInterface(self.parseInterface, FIF.CLOUD_DOWNLOAD, self.tr("Parse"), NavigationItemPosition.SCROLL)
         self.addSubInterface(self.sortInterface, FIF.EDIT, self.tr("Sort"), NavigationItemPosition.SCROLL)
         self.addSubInterface(self.excelInterface, CustomIcons.XLSX, self.tr("Excel"), NavigationItemPosition.SCROLL)
-        self.addSubInterface(self.setupInterface, CustomIcons.LIST, self.tr("Set Up"), NavigationItemPosition.SCROLL)
+        self.addSubInterface(self.setupInterface, CustomIcons.LIST, self.tr("Presets"), NavigationItemPosition.SCROLL)
         self.addSubInterface(self.settingInterface, FIF.SETTING, self.tr("Settings"), NavigationItemPosition.BOTTOM)
 
     def closeEvent(self, e):

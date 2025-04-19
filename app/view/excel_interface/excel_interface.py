@@ -34,7 +34,7 @@ from app.components.file_card import FileCard
 from app.view.excel_interface.UI_ExcelInterface import Ui_ExcelInterface
 
 
-# Worker class for working with Excel
+# Обработчик таблиц в 2 потоке
 class ExcelParser(QObject):
     format_result = pyqtSignal(list)
     parse_result = pyqtSignal(list)
@@ -63,7 +63,7 @@ class ExcelParser(QObject):
                     case "Kidis":
                         parsedData = parseKidis(source, filters, order)
             except Exception:
-                parsedData = source
+                parsedData = source  # Ретёрним линк, если страница не существует
             data.append(parsedData)
             self.progress_signal.emit(i)
             i += 1
@@ -123,7 +123,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.ExcelParser.moveToThread(self.ExcelThread)
         self.ExcelThread.start()
 
-        self.fileCard = FileCard(CustomIcons.XLSX, "Input Excel file", "", self)
+        self.fileCard = FileCard(CustomIcons.XLSX, "Input Excel file", "", self)  # Карточка выбора эксель файла
         self.inputFileCard.addWidget(self.fileCard)
 
         # connect signal to slots
@@ -133,7 +133,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.sheetChanged.connect(self.loadExcelTable)
 
     # Интерфейс
-    def toggleUrlParsing(self):
+    def toggleUrlParsing(self):  # Сбрасываем выбор парсинга и блокируем выбор сайта
         if self.useUrlToggle.isChecked():
             self.websiteNameCombo.setEnabled(True)
             self.excelRunBtn.setText("Parse")
@@ -205,13 +205,12 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
             values, max_row, max_column = excelHandler.getData(self.current_sheet)
             self.sheetChanged.emit(values, max_row, max_column)
 
-    def toggleSheetSelection(self):
+    def toggleSheetSelection(self):  # Отключаем смену страницы при обработке страниц
         for btn in reversed(range(self.horizontalLayout_3.count())):
             btn_widget_state = self.horizontalLayout_3.itemAt(btn).widget().isEnabled()
             self.horizontalLayout_3.itemAt(btn).widget().setEnabled(not btn_widget_state)
 
-    # removing sheets in scroll area when new file is uploaded
-    def onNewFileLoaded(self):
+    def onNewFileLoaded(self):  # удаляем все листы из панели выбора
         for i in reversed(range(self.horizontalLayout_3.count())):
             self.horizontalLayout_3.itemAt(i).widget().setParent(None)
 
@@ -230,8 +229,9 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
                 self.fileCard.openButton.setEnabled(False)
                 self.excelRunBtn.setEnabled(False)
                 self.useUrlToggle.setEnabled(False)
+                self.websiteNameCombo.setEnabled(False)
                 self.toggleSheetSelection()
-                QMetaObject.invokeMethod(
+                QMetaObject.invokeMethod(  # вкидываем данные в поток
                     self.ExcelParser,
                     "parseExcelInThread",
                     Qt.ConnectionType.QueuedConnection,
@@ -257,7 +257,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
                 self.excelRunBtn.setEnabled(False)
                 self.useUrlToggle.setEnabled(False)
                 self.toggleSheetSelection()
-                QMetaObject.invokeMethod(
+                QMetaObject.invokeMethod(  # вкидываем данные в поток
                     self.ExcelParser,
                     "formatExcelInThread",
                     Qt.ConnectionType.QueuedConnection,
@@ -289,6 +289,23 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
             )
 
     # Multithreading get results from ExcelParser worker
+    def on_parse_excel_result_ready(self, output):
+        self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
+        self.fileCard.openButton.setEnabled(True)
+        self.excelRunBtn.setEnabled(True)
+        self.useUrlToggle.setEnabled(True)
+        self.websiteNameCombo.setEnabled(True)
+        self.toggleSheetSelection()
+        InfoBar.success(
+            title="Parsing",
+            content="Excel table parsed successfully",
+            orient=Qt.Horizontal,
+            isClosable=True,
+            duration=2000,
+            position=InfoBarPosition.TOP_RIGHT,
+            parent=self,
+        )
+
     def on_format_excel_result_ready(self, output):
         self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
         self.fileCard.openButton.setEnabled(True)
@@ -298,22 +315,6 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         InfoBar.success(
             title="Formatting",
             content="Excel table formatted successfully",
-            orient=Qt.Horizontal,
-            isClosable=True,
-            duration=2000,
-            position=InfoBarPosition.TOP_RIGHT,
-            parent=self,
-        )
-
-    def on_parse_excel_result_ready(self, output):
-        self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
-        self.fileCard.openButton.setEnabled(True)
-        self.excelRunBtn.setEnabled(True)
-        self.useUrlToggle.setEnabled(True)
-        self.toggleSheetSelection()
-        InfoBar.success(
-            title="Parsing",
-            content="Excel table parsed successfully",
             orient=Qt.Horizontal,
             isClosable=True,
             duration=2000,

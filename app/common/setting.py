@@ -26,5 +26,8 @@ CONFIG_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.AppLocalData
 CONFIG_FILE = CONFIG_FOLDER / "config.json"
 SETTING_FILE = CONFIG_FOLDER / "setting.json"
 
+# List of websites that can be parsed
+WEBSITE_NAMES_LIST = ["Saks85", "Saucony", "Arena", "Kidis"]
+
 DOCUMENT_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.DocumentsLocation))
 DOWNLOAD_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.DownloadLocation))

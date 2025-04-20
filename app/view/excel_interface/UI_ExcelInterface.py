@@ -32,10 +32,6 @@ class Ui_ExcelInterface(object):
         self.horizontalLayout.addItem(spacerItem)
         self.websiteNameCombo = ComboBox(ExcelInterface)
         self.websiteNameCombo.setObjectName("websiteNameCombo")
-        self.websiteNameCombo.addItem("")
-        self.websiteNameCombo.addItem("")
-        self.websiteNameCombo.addItem("")
-        self.websiteNameCombo.addItem("")
         self.horizontalLayout.addWidget(self.websiteNameCombo)
         spacerItem1 = QtWidgets.QSpacerItem(30, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem1)
@@ -53,7 +49,7 @@ class Ui_ExcelInterface(object):
         self.sheetsView.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.sheetsView.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
         self.sheetsView.setWidgetResizable(True)
-        self.sheetsView.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
+        self.sheetsView.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.sheetsView.setObjectName("sheetsView")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 988, 38))
@@ -84,20 +80,13 @@ class Ui_ExcelInterface(object):
     def retranslateUi(self, ExcelInterface):
         _translate = QtCore.QCoreApplication.translate
         ExcelInterface.setWindowTitle(_translate("ExcelInterface", "Form"))
-        self.websiteNameCombo.setItemText(0, _translate("ExcelInterface", "Saks85"))
-        self.websiteNameCombo.setItemText(1, _translate("ExcelInterface", "Saucony"))
-        self.websiteNameCombo.setItemText(2, _translate("ExcelInterface", "Arena"))
-        self.websiteNameCombo.setItemText(3, _translate("ExcelInterface", "Kidis"))
         self.excelRunBtn.setText(_translate("ExcelInterface", "Parse"))
-
-
 from app.components.custom_table import CustomTable
 from qfluentwidgets import ComboBox, ProgressBar, PushButton, SmoothScrollArea, SwitchButton
 
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     ExcelInterface = QtWidgets.QWidget()
     ui = Ui_ExcelInterface()

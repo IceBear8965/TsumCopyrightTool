@@ -11,7 +11,7 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
 PURPOSE. See the GNU General Public License for more details.
 """
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtWidgets import QApplication, QWidget
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import InfoBar, InfoBarPosition
@@ -22,6 +22,7 @@ from app.common.parsers.saksParser import parseSaks
 from app.common.parsers.sauconyParser import parseSaucony
 from app.common.presetModel import presetModel
 from app.view.parse_interface.UI_ParseInterface import Ui_ParseInterface
+from app.common.set_websites_names import set_websites_names
 
 
 class ParseInterface(Ui_ParseInterface, QWidget):
@@ -35,6 +36,8 @@ class ParseInterface(Ui_ParseInterface, QWidget):
         # connect signal to slot
         self.parseBtn.clicked.connect(self.onParseBtnClicked)
         self.copyParsedBtn.clicked.connect(self.copyToClipboard)
+
+        set_websites_names(self.webSiteNameCombo)  # Добавляет элементы выбора в комбо бокс
 
     def onParseBtnClicked(self):
         global output

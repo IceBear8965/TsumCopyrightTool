@@ -32,6 +32,7 @@ from app.common.setting import DOWNLOAD_FOLDER
 from app.common.sortInput import sortInput
 from app.components.file_card import FileCard
 from app.view.excel_interface.UI_ExcelInterface import Ui_ExcelInterface
+from app.common.set_websites_names import set_websites_names
 
 
 # Обработчик таблиц в 2 потоке
@@ -107,6 +108,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
 
         self.setObjectName("excelInterface")
         self.toggleUrlParsing()
+        set_websites_names(self.websiteNameCombo)  # Добавляет элементы выбора в комбо бокс
         self.tablePreview.verticalHeader().show()
         self.useUrlToggle.setOnText("Parsing from url`s")
         self.useUrlToggle.setOffText("Formatting descriptions")

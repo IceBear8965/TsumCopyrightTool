@@ -72,28 +72,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="ComboBox" name="websiteNameCombo">
-         <item>
-          <property name="text">
-           <string>Saks85</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Saucony</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Arena</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Kidis</string>
-          </property>
-         </item>
-        </widget>
+        <widget class="ComboBox" name="websiteNameCombo"/>
        </item>
        <item>
         <spacer name="horizontalSpacer">

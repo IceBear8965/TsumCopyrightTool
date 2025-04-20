@@ -29,11 +29,8 @@ class Ui_ParseInterface(object):
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.webSiteNameCombo = ComboBox(ParseInterface)
+        self.webSiteNameCombo.setIconSize(QtCore.QSize(48, 48))
         self.webSiteNameCombo.setObjectName("webSiteNameCombo")
-        self.webSiteNameCombo.addItem("")
-        self.webSiteNameCombo.addItem("")
-        self.webSiteNameCombo.addItem("")
-        self.webSiteNameCombo.addItem("")
         self.horizontalLayout_3.addWidget(self.webSiteNameCombo, 0, QtCore.Qt.AlignLeft)
         spacerItem = QtWidgets.QSpacerItem(30, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem)
@@ -70,10 +67,6 @@ class Ui_ParseInterface(object):
     def retranslateUi(self, ParseInterface):
         _translate = QtCore.QCoreApplication.translate
         ParseInterface.setWindowTitle(_translate("ParseInterface", "Form"))
-        self.webSiteNameCombo.setItemText(0, _translate("ParseInterface", "Saks85"))
-        self.webSiteNameCombo.setItemText(1, _translate("ParseInterface", "Saucony"))
-        self.webSiteNameCombo.setItemText(2, _translate("ParseInterface", "Arena"))
-        self.webSiteNameCombo.setItemText(3, _translate("ParseInterface", "Kidis"))
         self.inputUrl.setPlaceholderText(_translate("ParseInterface", "URL"))
         self.parseBtn.setText(_translate("ParseInterface", "Get Information"))
         self.parsedOutput.setPlaceholderText(_translate("ParseInterface", "Output"))

@@ -103,5 +103,14 @@ class MainWindow(FluentWindow):
         if self.isMicaEffectEnabled():
             QTimer.singleShot(100, lambda: self.windowEffect.setMicaEffect(self.winId(), isDarkTheme()))
 
+    def onThemeChanged(self):
+        self.parseInterface.websiteNameCombo.setIcon(
+            QIcon(CustomIcons[self.parseInterface.websiteNameCombo.text()].path())
+        )
+        self.excelInterface.websiteNameCombo.setIcon(
+            QIcon(CustomIcons[self.excelInterface.websiteNameCombo.text()].path())
+        )
+
     def connectSignalToSlot(self):
         signalBus.micaEnableChanged.connect(self.setMicaEffectEnabled)
+        signalBus.themeChanged.connect(self.onThemeChanged)

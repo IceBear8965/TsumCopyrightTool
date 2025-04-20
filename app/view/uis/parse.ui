@@ -54,7 +54,7 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item alignment="Qt::AlignLeft">
-          <widget class="ComboBox" name="webSiteNameCombo">
+          <widget class="ComboBox" name="websiteNameCombo">
            <property name="iconSize">
             <size>
              <width>16</width>

@@ -1,5 +1,5 @@
 # coding: utf-8
-'''
+"""
 Copyright (C) 2025 IceBear8965
 
 This program is free software: you can redistribute it and/or
@@ -10,14 +10,16 @@ any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the GNU General Public License for more details.
-'''
+"""
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
 
 class SignalBus(QObject):
-    """ Signal bus """
+    """Signal bus"""
+
     micaEnableChanged = pyqtSignal(bool)
+    themeChanged = pyqtSignal()
 
 
 signalBus = SignalBus()

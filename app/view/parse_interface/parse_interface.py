@@ -13,14 +13,16 @@ PURPOSE. See the GNU General Public License for more details.
 
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtGui import QIcon
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import InfoBar, InfoBarPosition
+from qfluentwidgets import InfoBar, InfoBarPosition, getIconColor
 
 from app.common.parsers.arenaParser import parseArena
 from app.common.parsers.kidisParser import parseKidis
 from app.common.parsers.saksParser import parseSaks
 from app.common.parsers.sauconyParser import parseSaucony
 from app.common.presetModel import presetModel
+from app.common.icon import CustomIcons
 from app.view.parse_interface.UI_ParseInterface import Ui_ParseInterface
 from app.common.set_websites_names import set_websites_names
 
@@ -33,15 +35,20 @@ class ParseInterface(Ui_ParseInterface, QWidget):
         self.parseBtn.setIcon(FIF.CLOUD_DOWNLOAD)
         self.copyParsedBtn.setIcon(FIF.COPY)
         self.clipboard = QApplication.clipboard()
+
+        # Иконки при выборе имени сайта
+        set_websites_names(self.websiteNameCombo)  # Добавляет элементы выбора в комбо бокс
+        self.websiteNameCombo.setIconSize(QSize(16, 16))
+        self.websiteNameCombo.setIcon(QIcon(CustomIcons[self.websiteNameCombo.text()].path()))
+
         # connect signal to slot
         self.parseBtn.clicked.connect(self.onParseBtnClicked)
         self.copyParsedBtn.clicked.connect(self.copyToClipboard)
-
-        set_websites_names(self.webSiteNameCombo)  # Добавляет элементы выбора в комбо бокс
+        self.websiteNameCombo.currentTextChanged.connect(self.onWebsiteChanged)
 
     def onParseBtnClicked(self):
         global output
-        websiteName = self.webSiteNameCombo.currentText()
+        websiteName = self.websiteNameCombo.currentText()
         url = self.inputUrl.text()
         filters, order = presetModel.getSetting()
 
@@ -137,3 +144,6 @@ class ParseInterface(Ui_ParseInterface, QWidget):
                 position=InfoBarPosition.BOTTOM_RIGHT,
                 parent=self,
             )
+
+    def onWebsiteChanged(self, selected_element):
+        self.websiteNameCombo.setIcon(QIcon(CustomIcons[selected_element].path()))

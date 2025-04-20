@@ -14,9 +14,10 @@ PURPOSE. See the GNU General Public License for more details.
 from pathlib import Path
 
 import openpyxl
-from PyQt5.QtCore import Q_ARG, QMetaObject, QObject, Qt, QThread, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import Q_ARG, QMetaObject, QObject, Qt, QThread, pyqtSignal, pyqtSlot, QSize
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem, QWidget
-from qfluentwidgets import InfoBar, InfoBarPosition, RadioButton
+from PyQt5.QtGui import QIcon
+from qfluentwidgets import InfoBar, InfoBarPosition, RadioButton, getIconColor, Theme
 
 from app.common.addDots import addDots
 from app.common.presetModel import presetModel
@@ -53,18 +54,27 @@ class ExcelParser(QObject):
         data = []
         i = 1
         for source in sources:
-            try:
-                match websiteName:
-                    case "Saks85":
+            match websiteName:
+                case "Saks85":
+                    try:
                         parsedData = parseSaks(source, filters, order)
-                    case "Saucony":
+                    except Exception:
+                        parsedData = source  # Ретёрним линк, если страница не существует
+                case "Saucony":
+                    try:
                         parsedData = parseSaucony(source)
-                    case "Arena":
+                    except Exception:
+                        parsedData = source  # Ретёрним линк, если страница не существует
+                case "Arena":
+                    try:
                         parsedData = parseArena(source)
-                    case "Kidis":
+                    except Exception:
+                        parsedData = source  # Ретёрним линк, если страница не существует
+                case "Kidis":
+                    try:
                         parsedData = parseKidis(source, filters, order)
-            except Exception:
-                parsedData = source  # Ретёрним линк, если страница не существует
+                    except Exception:
+                        parsedData = source  # Ретёрним линк, если страница не существует
             data.append(parsedData)
             self.progress_signal.emit(i)
             i += 1
@@ -108,7 +118,6 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
 
         self.setObjectName("excelInterface")
         self.toggleUrlParsing()
-        set_websites_names(self.websiteNameCombo)  # Добавляет элементы выбора в комбо бокс
         self.tablePreview.verticalHeader().show()
         self.useUrlToggle.setOnText("Parsing from url`s")
         self.useUrlToggle.setOffText("Formatting descriptions")
@@ -128,11 +137,17 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.fileCard = FileCard(CustomIcons.XLSX, "Input Excel file", "", self)  # Карточка выбора эксель файла
         self.inputFileCard.addWidget(self.fileCard)
 
+        # Иконки при выборе имени сайта
+        set_websites_names(self.websiteNameCombo)  # Добавляет элементы выбора в комбо бокс
+        self.websiteNameCombo.setIconSize(QSize(16, 16))
+        self.websiteNameCombo.setIcon(QIcon(CustomIcons[self.websiteNameCombo.text()].path()))
+
         # connect signal to slots
         self.useUrlToggle.checkedChanged.connect(self.toggleUrlParsing)
         self.fileCard.openButton.clicked.connect(self.getExcelFile)
         self.excelRunBtn.clicked.connect(self.processExcel)
         self.sheetChanged.connect(self.loadExcelTable)
+        self.websiteNameCombo.currentTextChanged.connect(self.onWebsiteChanged)
 
     # Интерфейс
     def toggleUrlParsing(self):  # Сбрасываем выбор парсинга и блокируем выбор сайта
@@ -142,6 +157,9 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         else:
             self.websiteNameCombo.setEnabled(False)
             self.excelRunBtn.setText("Format")
+
+    def onWebsiteChanged(self, selected_element):
+        self.websiteNameCombo.setIcon(QIcon(CustomIcons[selected_element].path()))
 
     def getExcelFile(self):
         excel_file, _ = QFileDialog.getOpenFileName(self, "Open file", str(DOWNLOAD_FOLDER), "Excel files (*.xlsx)")

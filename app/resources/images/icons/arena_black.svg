@@ -24,8 +24,8 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="px"
      inkscape:zoom="13"
-     inkscape:cx="14.153846"
-     inkscape:cy="19.538462"
+     inkscape:cx="11.076923"
+     inkscape:cy="25.230769"
      inkscape:window-width="1898"
      inkscape:window-height="1010"
      inkscape:window-x="0"
@@ -40,14 +40,14 @@
      id="layer1">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:41.9729px;font-family:Montserrat;-inkscape-font-specification:Montserrat;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke-width:1.5136"
-       x="0.28113729"
-       y="30.690531"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:44.7829px;font-family:'KG Blank Space Sketch';-inkscape-font-specification:'KG Blank Space Sketch';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke-width:1.59939"
+       x="0.84641069"
+       y="30.858389"
        id="text1"><tspan
          sodipodi:role="line"
          id="tspan1"
-         x="0.28113729"
-         y="30.690531"
-         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:41.9729px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Semi-Bold';stroke-width:1.5136">A</tspan></text>
+         x="0.84641069"
+         y="30.858389"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'KG Blank Space Sketch';-inkscape-font-specification:'KG Blank Space Sketch';fill:#000000;stroke-width:1.59939">a</tspan></text>
   </g>
 </svg>

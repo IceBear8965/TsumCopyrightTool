@@ -159,7 +159,10 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
             self.excelRunBtn.setText("Format")
 
     def onWebsiteChanged(self, selected_element):
-        self.websiteNameCombo.setIcon(QIcon(CustomIcons[selected_element].path()))
+        try:
+            self.websiteNameCombo.setIcon(QIcon(CustomIcons[selected_element].path()))
+        except Exception:
+            self.websiteNameCombo.setIcon(QIcon())
 
     def getExcelFile(self):
         excel_file, _ = QFileDialog.getOpenFileName(self, "Open file", str(DOWNLOAD_FOLDER), "Excel files (*.xlsx)")

@@ -8,5 +8,8 @@ from PyQt5.QtGui import QIcon
 
 def set_websites_names(combo_box: ComboBox or QComboBox):
     for website_name in WEBSITE_NAMES_LIST:
-        icon = CustomIcons[website_name]
-        combo_box.addItem(website_name, icon)
+        try:
+            icon = CustomIcons[website_name]
+            combo_box.addItem(website_name, icon)
+        except Exception:
+            combo_box.addItem(website_name)

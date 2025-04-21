@@ -146,4 +146,7 @@ class ParseInterface(Ui_ParseInterface, QWidget):
             )
 
     def onWebsiteChanged(self, selected_element):
-        self.websiteNameCombo.setIcon(QIcon(CustomIcons[selected_element].path()))
+        try:
+            self.websiteNameCombo.setIcon(QIcon(CustomIcons[selected_element].path()))
+        except Exception:
+            self.websiteNameCombo.setIcon(QIcon())

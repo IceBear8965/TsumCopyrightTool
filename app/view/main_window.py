@@ -35,6 +35,7 @@ from app.common.signal_bus import signalBus
 from app.common.config import cfg
 from app.common.icon import CustomIcons
 from app.common.setting import SETTING_FILE
+from app.common.style_sheet import StyleSheet
 from app.view.parse_interface.parse_interface import ParseInterface
 from app.view.sort_interface.sort_interface import SortInterface
 from app.view.excel_interface.excel_interface import ExcelInterface
@@ -51,6 +52,8 @@ class MainWindow(FluentWindow):
         self.themeListener = SystemThemeListener(self)
 
         self.setMicaEffectEnabled(cfg.get(cfg.micaEnabled))
+
+        StyleSheet.MAIN_WINDOW.apply(self)
 
         self.parseInterface = ParseInterface(self)
         self.sortInterface = SortInterface(self)

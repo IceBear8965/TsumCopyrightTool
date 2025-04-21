@@ -1,0 +1,5 @@
+* {
+    font-size: 15px;
+    font-family: Segoe UI Variable;
+    font-weight: 400;
+}

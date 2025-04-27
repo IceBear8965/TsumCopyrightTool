@@ -165,19 +165,27 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
             filters = self.filtersEdit.toPlainText().split("\n")
             order = self.orderEdit.toPlainText().split("\n")
 
+            # Удаляем все пробелы перед и после введенных фильтров
             filters = list(map(str.strip, filters))
             order = list(map(str.strip, order))
 
-            for filter in filters:
-                if filter == "":
-                    filters.pop(filters.index(filter))
-            for o in order:
-                if o == "":
-                    order.pop(order.index(o))
+            # Удаляем пустые строки в ввёденных параметрах
+            for f in filters:
+                for filter in filters:
+                    if filter == "":
+                        filters.pop(filters.index(filter))
 
+            for o in order:
+                for param in order:
+                    if param == "":
+                        order.pop(order.index(param))
+
+            # Устанавливаем провалидированые значения в модель
             preset["filters"] = filters
             preset["order"] = order
+
             self.saver.save(SETTING_FILE, presetModel.presetsData)
+            self.setRelevantFields()
             InfoBar.success(
                 title="Save",
                 content="Preset saved successfully",

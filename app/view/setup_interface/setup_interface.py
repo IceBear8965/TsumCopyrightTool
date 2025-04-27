@@ -54,28 +54,24 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
         self.savePresetBtn.setIcon(FIF.SAVE)
         self.addPresetBtn.setIcon(FIF.ADD)
         self.delPresetBtn.setIcon(FIF.REMOVE)
-        self.presetsData = {
-            "current": "",
-            "presets": {},
-        }
 
         self.presetList.setModel(presetModel)
         self.presetList.setSelectionMode(QAbstractItemView.SingleSelection)
         self.selectionModel = self.presetList.selectionModel()
 
         self.saver = Saver()
-        self.savedData = self.saver.load(SETTING_FILE)
-
-        if not isinstance(self.savedData, bool) and not isinstance(self.savedData, list):
-            presetModel.presetsData = self.savedData
-
-            # Visual selection of item in "current"
-            if presetModel.getCurrentPreset() != "":
-                self.presetList.setCurrentIndex(presetModel.index(presetModel.getCurrentPressetIndex()))
-                self.setRelevantFields()
-        else:
-            presetModel.presetsData = self.presetsData
-            self.saver.save(SETTING_FILE, presetModel.presetsData)
+        # self.savedData = self.saver.load(SETTING_FILE)
+        #
+        # if not isinstance(self.savedData, bool) and not isinstance(self.savedData, list):
+        #     presetModel.presetsData = self.savedData
+        #
+        # Visual selection of item in "current"
+        if presetModel.getCurrentPreset() != "":
+            self.presetList.setCurrentIndex(presetModel.index(presetModel.getCurrentPressetIndex()))
+            self.setRelevantFields()
+        # else:
+        #     presetModel.presetsData = self.presetsData
+        #     self.saver.save(SETTING_FILE, presetModel.presetsData)
 
         # connect signals to slots
         self.addPresetBtn.clicked.connect(self.addBtnHandler)
@@ -89,8 +85,8 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
             presetModel.getPresetsObj().update(
                 {
                     name: {
-                        "filters": "",
-                        "order": "",
+                        "filters": [],
+                        "order": [],
                     }
                 }
             )
@@ -102,6 +98,16 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
             presetModel.layoutChanged.emit()
 
             self.saver.save(SETTING_FILE, presetModel.presetsData)
+        else:
+            InfoBar.warning(
+                title="Add",
+                content="Enter name in the field on the left",
+                orient=Qt.Horizontal,
+                isClosable=True,
+                duration=2000,
+                position=InfoBarPosition.TOP_RIGHT,
+                parent=self,
+            )
 
     def delBtnHandler(self):
         if len(self.presetList.selectedIndexes()) > 0:
@@ -114,6 +120,26 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
                 self.presetList.clearSelection()
                 self.saver.save(SETTING_FILE, presetModel.presetsData)
                 presetModel.layoutChanged.emit()
+            else:
+                InfoBar.warning(
+                    title="Delete",
+                    content="Cannot delete last preset",
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    duration=2000,
+                    position=InfoBarPosition.TOP_RIGHT,
+                    parent=self,
+                )
+        else:
+            InfoBar.warning(
+                title="Delete",
+                content="Select preset which you want to delete",
+                orient=Qt.Horizontal,
+                isClosable=True,
+                duration=2000,
+                position=InfoBarPosition.TOP_RIGHT,
+                parent=self,
+            )
 
     def changeSelectionHandler(self, selected):
         selectedIndex = selected.row()
@@ -136,8 +162,19 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
     def saveBtnHandler(self):
         try:
             preset = presetModel.getPresetsObj().get(presetModel.getCurrentPreset())
-            filters = self.filtersEdit.toPlainText()
-            order = self.orderEdit.toPlainText()
+            filters = self.filtersEdit.toPlainText().split("\n")
+            order = self.orderEdit.toPlainText().split("\n")
+
+            filters = list(map(str.strip, filters))
+            order = list(map(str.strip, order))
+
+            for filter in filters:
+                if filter == "":
+                    filters.pop(filters.index(filter))
+            for o in order:
+                if o == "":
+                    order.pop(order.index(o))
+
             preset["filters"] = filters
             preset["order"] = order
             self.saver.save(SETTING_FILE, presetModel.presetsData)
@@ -162,9 +199,9 @@ class SetupInterface(Ui_SetUpInterface, QWidget):
             )
 
     def setRelevantFields(self):
-        preset = presetModel.getCurrentPreset()
-        filters = presetModel.getPresetsObj().get(preset).get("filters")
-        order = presetModel.getPresetsObj().get(preset).get("order")
+        filters, order = presetModel.getSetting()
+        filters = "\n".join(filters)
+        order = "\n".join(order)
 
         self.filtersEdit.setPlainText(filters)
         self.orderEdit.setPlainText(order)

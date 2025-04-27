@@ -55,6 +55,40 @@ class MainWindow(FluentWindow):
 
         StyleSheet.MAIN_WINDOW.apply(self)
 
+        # Загружаем сохраненные пресеты
+        self.presetsTemplate = {
+            "current": "",
+            "presets": {},
+        }
+
+        self.saver = Saver()
+        if self.saver.load(SETTING_FILE):  # Проверка существует ли файл настроек
+            self.savedData = self.saver.load(SETTING_FILE)
+            self.presets = self.savedData.get("presets")
+
+            if len(self.presets.keys()) > 0:  # Проверяем пустой или нет объект с прессетами
+                self.firstPreset = self.presets.get(
+                    next(iter(self.presets))
+                )  # Если не пустой, то находим в нем первый пресет
+                self.keys = list(self.presets.keys())
+                for key in self.keys:
+                    preset = self.presets[key]
+
+                    if not isinstance(
+                        preset.get("filters"), str
+                    ):  # Если первый пресет не хранит в себе строки, то пишем его в модель
+                        presetModel.presetsData = self.savedData
+                    else:  # Если в первом пресете лежат строки, то пишем шаблон в модель и сохраняем шаблон в файл настроек
+                        presetModel.presetsData = self.presetsTemplate
+                        self.saver.save(SETTING_FILE, presetModel.presetsData)
+
+            else:  # Если объект с пресетами пустой, то пишем шаблон в модель и сохраняем шаблон в файл настроек
+                presetModel.presetsData = self.presetsTemplate
+                self.saver.save(SETTING_FILE, presetModel.presetsData)
+        else:  # Если файла настроек нет, то грузим в модель шаблон и сохраняем файл настроек
+            presetModel.presetsData = self.presetsTemplate
+            self.saver.save(SETTING_FILE, presetModel.presetsData)
+
         self.parseInterface = ParseInterface(self)
         self.sortInterface = SortInterface(self)
         self.excelInterface = ExcelInterface(self)
@@ -74,10 +108,10 @@ class MainWindow(FluentWindow):
         self.setObjectName("mainWindow")
 
         # loading data from file
-        self.saver = Saver()
-        self.savedData = self.saver.load(SETTING_FILE)
-        if self.saver.load(SETTING_FILE):
-            presetModel.dataList = self.savedData
+        # self.saver = Saver()
+        # self.savedData = self.saver.load(SETTING_FILE)
+        # if self.saver.load(SETTING_FILE):
+        #     presetModel.dataList = self.savedData
 
         desktop = QApplication.desktop().availableGeometry()
         w, h = desktop.width(), desktop.height()

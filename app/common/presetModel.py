@@ -37,10 +37,8 @@ class PresetModel(QAbstractListModel):
         return currentPressetIndex
 
     def getSetting(self):
-        filters = self.getPresetsObj().get(self.getCurrentPreset()).get("filters").split("\n")
-        order = self.getPresetsObj().get(self.getCurrentPreset()).get("order").split("\n")
-        filters = filters if filters[0] != "" else []
-        order = order if order[0] != "" else []
+        filters = self.getPresetsObj().get(self.getCurrentPreset()).get("filters")
+        order = self.getPresetsObj().get(self.getCurrentPreset()).get("order")
         return filters, order
 
 

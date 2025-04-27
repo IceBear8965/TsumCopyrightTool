@@ -24,7 +24,8 @@ RELEASE_URL = "https://github.com/zhiyiYo/Fluent-M3U8/releases"
 
 CONFIG_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.AppLocalDataLocation)) / APP_NAME
 CONFIG_FILE = CONFIG_FOLDER / "config.json"
-SETTING_FILE = CONFIG_FOLDER / "setting.json"
+# SETTING_FILE = CONFIG_FOLDER / "setting.json"
+SETTING_FILE = "setting.json"
 
 # List of websites that can be parsed
 WEBSITE_NAMES_LIST = ["Saks85", "Saucony", "Arena", "Kidis"]

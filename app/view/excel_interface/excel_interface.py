@@ -314,7 +314,19 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
 
     # Multithreading get results from ExcelParser worker
     def on_parse_excel_result_ready(self, output):
-        self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
+        try:
+            self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
+        except Exception:
+            InfoBar.error(
+                title="Saving",
+                content="An error occurred while writing the file. Check that it is not open in another program.",
+                orient=Qt.Horizontal,
+                isClosable=True,
+                duration=2000,
+                position=InfoBarPosition.TOP_RIGHT,
+                parent=self,
+            )
+
         self.fileCard.openButton.setEnabled(True)
         self.excelRunBtn.setEnabled(True)
         self.useUrlToggle.setEnabled(True)
@@ -331,7 +343,19 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         )
 
     def on_format_excel_result_ready(self, output):
-        self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
+        try:
+            self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
+        except Exception:
+            InfoBar.error(
+                title="Saving",
+                content="An error occurred while writing the file. Check that it is not open in another program.",
+                orient=Qt.Horizontal,
+                isClosable=True,
+                duration=2000,
+                position=InfoBarPosition.TOP_RIGHT,
+                parent=self,
+            )
+
         self.fileCard.openButton.setEnabled(True)
         self.excelRunBtn.setEnabled(True)
         self.useUrlToggle.setEnabled(True)

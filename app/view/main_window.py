@@ -64,23 +64,22 @@ class MainWindow(FluentWindow):
         self.saver = Saver()
         if self.saver.load(SETTING_FILE):  # Проверка существует ли файл настроек
             self.savedData = self.saver.load(SETTING_FILE)
-            self.presets = self.savedData.get("presets")
+            presets = self.savedData.get("presets")
 
-            if len(self.presets.keys()) > 0:  # Проверяем пустой или нет объект с прессетами
-                self.firstPreset = self.presets.get(
-                    next(iter(self.presets))
-                )  # Если не пустой, то находим в нем первый пресет
-                self.keys = list(self.presets.keys())
-                for key in self.keys:
-                    preset = self.presets[key]
+            if len(presets.keys()) > 0:  # Проверяем пустой или нет объект с прессетами
+                keys = list(presets.keys())
 
-                    if not isinstance(
-                        preset.get("filters"), str
-                    ):  # Если первый пресет не хранит в себе строки, то пишем его в модель
-                        presetModel.presetsData = self.savedData
-                    else:  # Если в первом пресете лежат строки, то пишем шаблон в модель и сохраняем шаблон в файл настроек
-                        presetModel.presetsData = self.presetsTemplate
-                        self.saver.save(SETTING_FILE, presetModel.presetsData)
+                flag = False
+                for key in keys:
+                    preset = presets[key]
+                    if isinstance(preset.get("filters"), str):
+                        flag = True  # Переменная для проверки правильности фильтров
+
+                if flag:
+                    presetModel.presetsData = self.presetsTemplate
+                    self.saver.save(SETTING_FILE, presetModel.presetsData)
+                else:  # Если в первом пресете лежат строки, то пишем шаблон в модель и сохраняем шаблон в файл настроек
+                    presetModel.presetsData = self.savedData
 
             else:  # Если объект с пресетами пустой, то пишем шаблон в модель и сохраняем шаблон в файл настроек
                 presetModel.presetsData = self.presetsTemplate

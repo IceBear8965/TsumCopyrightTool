@@ -30,15 +30,20 @@ class PresetModel(QAbstractListModel):
         return self.presetsData.get("presets", dict())
 
     def getCurrentPreset(self) -> str:
-        return self.presetsData.get("current", dict())
+        return self.presetsData.get("current", str())
 
     def getCurrentPressetIndex(self):
         currentPressetIndex = list(self.getPresetsObj().keys()).index(self.getCurrentPreset())
         return currentPressetIndex
 
     def getSetting(self):
-        filters = self.getPresetsObj().get(self.getCurrentPreset()).get("filters")
-        order = self.getPresetsObj().get(self.getCurrentPreset()).get("order")
+        try:
+            filters = self.getPresetsObj().get(self.getCurrentPreset()).get("filters")
+            order = self.getPresetsObj().get(self.getCurrentPreset()).get("order")
+        except Exception:
+            filters = []
+            order = []
+        print(1)
         return filters, order
 
 

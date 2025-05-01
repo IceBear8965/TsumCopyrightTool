@@ -1,4 +1,4 @@
-'''
+"""
 Copyright (C) 2025 IceBear8965
 
 This program is free software: you can redistribute it and/or
@@ -9,16 +9,25 @@ any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the GNU General Public License for more details.
-'''
+"""
 
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 from PyQt5.QtCore import Qt, QPoint
-from qfluentwidgets import CardWidget, IconWidget, PushButton, BodyLabel, CaptionLabel, TransparentToolButton, \
-    FluentIcon, Action, RoundMenu
+from qfluentwidgets import (
+    CardWidget,
+    IconWidget,
+    PushButton,
+    BodyLabel,
+    CaptionLabel,
+    TransparentToolButton,
+    FluentIcon,
+    Action,
+    RoundMenu,
+)
 
 
 class FileCard(CardWidget):
-    """ App card """
+    """File card"""
 
     def __init__(self, icon, title, content, parent=None):
         super().__init__(parent)

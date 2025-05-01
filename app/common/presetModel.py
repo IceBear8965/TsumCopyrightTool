@@ -43,7 +43,6 @@ class PresetModel(QAbstractListModel):
         except Exception:
             filters = []
             order = []
-        print(1)
         return filters, order
 
 

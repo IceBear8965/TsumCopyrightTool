@@ -28,14 +28,15 @@ from qfluentwidgets import (
 )
 from qfluentwidgets import FluentIcon as FIF
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtGui import QDesktopServices, QFont, QIcon
 from PyQt5.QtWidgets import QWidget, QLabel, QFileDialog
 
-from app.common.setting import DOCUMENT_FOLDER
+from app.common.setting import DOCUMENT_FOLDER, VERSION, AUTHOR, YEAR, REPO_URL
 from app.common.signal_bus import signalBus
 from app.common.config import cfg
 from app.common.icon import CustomIcons
+from app.components.about_card import AboutCard
 from app.view.parse_interface.parse_interface import ParseInterface
 
 
@@ -78,6 +79,15 @@ class SettingInterface(ScrollArea):
             self.personalGroup,
         )
 
+        self.aboutGroup = SettingCardGroup(self.tr("About"), self.scrollWidget)
+        self.aboutCard = AboutCard(
+            FIF.INFO,
+            self.tr("About"),
+            "© " + self.tr("Copyright") + f" {YEAR}, {AUTHOR}. " + self.tr("Version") + " " + VERSION,
+            self.aboutGroup,
+        )
+        self.aboutCard.setBtnIcon(FIF.GITHUB)
+
         self.__initWidget()
 
     def __initWidget(self):
@@ -106,11 +116,15 @@ class SettingInterface(ScrollArea):
         self.personalGroup.addSettingCard(self.themeCard)
         self.personalGroup.addSettingCard(self.micaCard)
 
+        # about
+        self.aboutGroup.addSettingCard(self.aboutCard)
+
         # add setting card group to layout
         self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(36, 10, 36, 0)
         self.expandLayout.addWidget(self.foldersGroup)
         self.expandLayout.addWidget(self.personalGroup)
+        self.expandLayout.addWidget(self.aboutGroup)
 
     def __onOutputFolderCardClicked(self):
         """download folder card clicked slot"""
@@ -123,9 +137,8 @@ class SettingInterface(ScrollArea):
         cfg.set(cfg.outputFolder, folder)
         self.outputFolderCard.setContent(folder)
 
-    # def _onThemeChanged(self):
-    #     print(1)
-    #     self.websiteNameCombo.setIcon(QIcon(CustomIcons[ParseInterface.websiteNameCombo.text()].path()))
+    def aboutCardClicked(self):
+        QDesktopServices.openUrl(QUrl(REPO_URL))
 
     def _connectSignalToSlot(self):
         # personalization
@@ -135,3 +148,6 @@ class SettingInterface(ScrollArea):
 
         # Output folder
         self.outputFolderCard.clicked.connect(self.__onOutputFolderCardClicked)
+
+        # about
+        self.aboutCard.clicked.connect(self.aboutCardClicked)

@@ -17,10 +17,10 @@ from PyQt5.QtCore import QStandardPaths
 
 YEAR = 2025
 AUTHOR = "IceBear8965"
-VERSION = "0.0.1"
+VERSION = "1.5.5.2"
 APP_NAME = "TsumCopyrightTool"
-REPO_URL = "https://github.com/zhiyiYo/Fluent-M3U8"
-RELEASE_URL = "https://github.com/zhiyiYo/Fluent-M3U8/releases"
+REPO_URL = "https://github.com/IceBear8965/TsumCopyrightTool"
+RELEASE_URL = "https://github.com/IceBear8965/TsumCopyrightTool/releases"
 
 CONFIG_FOLDER = Path(QStandardPaths.writableLocation(QStandardPaths.AppLocalDataLocation)) / APP_NAME
 CONFIG_FILE = CONFIG_FOLDER / "config.json"

@@ -53,8 +53,6 @@ class MainWindow(FluentWindow):
 
         self.setMicaEffectEnabled(cfg.get(cfg.micaEnabled))
 
-        StyleSheet.MAIN_WINDOW.apply(self)
-
         # Загружаем сохраненные пресеты
         self.presetsTemplate = {
             "current": "",

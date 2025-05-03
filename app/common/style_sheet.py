@@ -17,7 +17,6 @@ from qfluentwidgets import StyleSheetBase, qconfig, Theme
 
 class StyleSheet(StyleSheetBase, Enum):
     CUSTOM_TABLE = "table_view"
-    MAIN_WINDOW = "main_window"
 
     def path(self, theme=Theme.AUTO):
         theme = qconfig.theme if theme == Theme.AUTO else theme

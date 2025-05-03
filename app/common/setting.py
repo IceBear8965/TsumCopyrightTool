@@ -17,7 +17,7 @@ from PyQt5.QtCore import QStandardPaths
 
 YEAR = 2025
 AUTHOR = "IceBear8965"
-VERSION = "1.5.5.2"
+VERSION = "1.5.5.3"
 APP_NAME = "TsumCopyrightTool"
 REPO_URL = "https://github.com/IceBear8965/TsumCopyrightTool"
 RELEASE_URL = "https://github.com/IceBear8965/TsumCopyrightTool/releases"

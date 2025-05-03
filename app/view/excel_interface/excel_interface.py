@@ -10,7 +10,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the GNU General Public License for more details.
 """
-
+import os
 from pathlib import Path
 
 import openpyxl
@@ -111,8 +111,9 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
+        self.current_filename = ""
         self.current_workbook = None
-        self.current_sheet = ""
+        self.current_sheetname = ""
         self.current_values = []
         self.max_row = 0
 
@@ -171,11 +172,13 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
             self.fileCard.setContent(excel_file)
             self.tablePreview.clearSelection()
             wb = openpyxl.load_workbook(excel_file, read_only=True)
-            self.current_workbook = wb
             ws = wb.worksheets[0]
             values, max_row, max_column = excelHandler.getData(ws)
             self.loadExcelTable(values, max_row, max_column)
             self.setSheets(wb)
+            self.current_filename = Path(excel_file).stem
+            self.current_workbook = wb
+            self.current_sheetname = wb.sheetnames[0]
             self.current_values = values
             self.max_row = max_row
         else:
@@ -225,8 +228,9 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
     def sheetToggled(self):
         radiobutton = self.sender()
         if radiobutton.isChecked():
-            self.current_sheet = self.current_workbook[radiobutton.sheet]
-            values, max_row, max_column = excelHandler.getData(self.current_sheet)
+            current_sheet = self.current_workbook[radiobutton.sheet]
+            self.current_sheetname = radiobutton.sheet
+            values, max_row, max_column = excelHandler.getData(current_sheet)
             self.sheetChanged.emit(values, max_row, max_column)
 
     def toggleSheetSelection(self):  # Отключаем смену страницы при обработке страниц
@@ -288,7 +292,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
                     Q_ARG(list, self.current_values),
                     Q_ARG(int, columnIndex),
                     Q_ARG(list, filters),
-                    Q_ARG(list, paramorder),
+                    Q_ARG(list, paramorder)
                 )
                 self.progressBar.setValue(0)
                 self.progressBar.setRange(0, self.max_row)
@@ -314,8 +318,20 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
 
     # Multithreading get results from ExcelParser worker
     def on_parse_excel_result_ready(self, output):
+        filename = f"{self.current_filename}-{self.current_sheetname}-output.xlsx"
+        output_file = os.path.join(cfg.get(cfg.outputFolder), filename)
         try:
-            self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
+            self.saver.saveToExcel(output, output_file)
+            InfoBar.success(
+                title="Parsing",
+                content="Excel table parsed successfully",
+                orient=Qt.Horizontal,
+                isClosable=True,
+                duration=2000,
+                position=InfoBarPosition.TOP_RIGHT,
+                parent=self,
+            )
+
         except Exception:
             InfoBar.error(
                 title="Saving",
@@ -332,19 +348,22 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.useUrlToggle.setEnabled(True)
         self.websiteNameCombo.setEnabled(True)
         self.toggleSheetSelection()
-        InfoBar.success(
-            title="Parsing",
-            content="Excel table parsed successfully",
-            orient=Qt.Horizontal,
-            isClosable=True,
-            duration=2000,
-            position=InfoBarPosition.TOP_RIGHT,
-            parent=self,
-        )
 
     def on_format_excel_result_ready(self, output):
+        filename = f"{self.current_filename}-{self.current_sheetname}-output.xlsx"
+        output_file = os.path.join(cfg.get(cfg.outputFolder), filename)
         try:
-            self.saver.saveToExcel(output, cfg.get(cfg.outputFolder))
+            self.saver.saveToExcel(output, output_file)
+
+            InfoBar.success(
+                title="Formatting",
+                content="Excel table formatted successfully",
+                orient=Qt.Horizontal,
+                isClosable=True,
+                duration=2000,
+                position=InfoBarPosition.TOP_RIGHT,
+                parent=self,
+            )
         except Exception:
             InfoBar.error(
                 title="Saving",
@@ -360,15 +379,6 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.excelRunBtn.setEnabled(True)
         self.useUrlToggle.setEnabled(True)
         self.toggleSheetSelection()
-        InfoBar.success(
-            title="Formatting",
-            content="Excel table formatted successfully",
-            orient=Qt.Horizontal,
-            isClosable=True,
-            duration=2000,
-            position=InfoBarPosition.TOP_RIGHT,
-            parent=self,
-        )
 
     def progressUpdate(self, value):
         self.progressBar.setValue(value)

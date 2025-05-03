@@ -19,7 +19,7 @@ class Saver:
         except Exception:
             return False
 
-    def saveToExcel(self, output, output_folder):
+    def saveToExcel(self, output, output_file):
         outputWorkbook = openpyxl.Workbook(write_only=True)
         outputWorksheet = outputWorkbook.create_sheet()
         rowIndex = 1
@@ -27,5 +27,5 @@ class Saver:
             outputWorksheet.append([item])
             rowIndex += 1
 
-        outputWorkbook.save(output_folder + "/output.xlsx")
+        outputWorkbook.save(output_file)
         outputWorkbook.close()

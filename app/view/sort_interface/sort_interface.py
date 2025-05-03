@@ -41,18 +41,23 @@ class SortInterface(Ui_SortInterface, QWidget):
     def sorting(self):
         useFilters = self.useFiltersToggle.isChecked()
         filters, order = presetModel.getSetting()
-        sortdata = self.sortTextInput.toPlainText().split("\n")
+        input_data = self.sortTextInput.toPlainText().split("\n")
+
+        data = []
+        for item in input_data:
+            if item != "":
+                data.append(item)
 
         if useFilters:
-            if len(filters) > 1 and len(order) > 1 and len(sortdata) > 1:
-                sortdata = sortInput(sortdata, filters, order)
-                output = addDots(sortdata)
+            if len(data) > 1:
+                data = sortInput(data, filters, order)
+                output = addDots(data)
                 self.sortedOutput.setPlainText(output)
                 self.sortTextInput.clear()
             else:
                 InfoBar.warning(
                     title="Error",
-                    content="Enter valid data, filters and order",
+                    content="Enter valid data",
                     orient=Qt.Horizontal,
                     isClosable=True,
                     duration=2000,
@@ -60,9 +65,9 @@ class SortInterface(Ui_SortInterface, QWidget):
                     parent=self,
                 )
         else:
-            if len(sortdata) > 1:
+            if len(data) > 1:
                 data = []
-                for i in sortdata:
+                for i in data:
                     if i != "":
                         data.append(i.strip())
 

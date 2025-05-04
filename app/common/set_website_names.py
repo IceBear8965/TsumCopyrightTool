@@ -3,6 +3,6 @@ from qfluentwidgets import ComboBox
 from PyQt5.QtWidgets import QComboBox
 
 
-def set_websites_names(combo_box: ComboBox or QComboBox):
-    for website_name in WEBSITE_NAMES_LIST:
+def set_website_names(combo_box: ComboBox or QComboBox, values=WEBSITE_NAMES_LIST):
+    for website_name in values:
             combo_box.addItem(website_name)

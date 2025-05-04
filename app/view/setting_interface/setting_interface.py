@@ -143,7 +143,6 @@ class SettingInterface(ScrollArea):
     def _connectSignalToSlot(self):
         # personalization
         cfg.themeChanged.connect(setTheme)
-        self.themeCard.comboBox.currentIndexChanged.connect(signalBus.themeChanged)
         self.micaCard.checkedChanged.connect(signalBus.micaEnableChanged)
 
         # Output folder

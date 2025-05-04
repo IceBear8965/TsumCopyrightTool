@@ -20,6 +20,7 @@ class CustomIcons(FluentIconBase, Enum):
     TABLE = "table-solid"
     XLSX = "xlsx-file"
     LIST = "list"
+    LINK = "link-solid"
 
     def path(self, theme=Theme.AUTO):
         return f"app/resources/images/icons/{self.value}_{getIconColor(theme)}.svg"

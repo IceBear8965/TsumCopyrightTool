@@ -24,7 +24,7 @@ from app.common.parsers.sauconyParser import parseSaucony
 from app.common.presetModel import presetModel
 from app.common.icon import CustomIcons
 from app.view.parse_interface.UI_ParseInterface import Ui_ParseInterface
-from app.common.set_websites_names import set_websites_names
+from app.common.set_website_names import set_website_names
 
 
 class ParseInterface(Ui_ParseInterface, QWidget):
@@ -37,7 +37,7 @@ class ParseInterface(Ui_ParseInterface, QWidget):
         self.clipboard = QApplication.clipboard()
 
         # Иконки при выборе имени сайта
-        set_websites_names(self.websiteNameCombo)  # Добавляет элементы выбора в комбо бокс
+        set_website_names(self.websiteNameCombo)  # Добавляет элементы выбора в комбо бокс
 
         # connect signal to slot
         self.parseBtn.clicked.connect(self.onParseBtnClicked)

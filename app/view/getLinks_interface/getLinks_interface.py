@@ -23,17 +23,15 @@ from app.common.addDots import addDots
 from app.common.presetModel import presetModel
 from app.common.config import cfg
 from app.common.excelHandler import excelHandler
+from app.common.links_fetchers.saks_links_fetcher import fetch_saks_links
+from app.common.links_fetchers.kidis_links_fetcher import fetch_kidis_links
 from app.common.icon import CustomIcons
-from app.common.parsers.arenaParser import parseArena
-from app.common.parsers.kidisParser import parseKidis
-from app.common.parsers.saksParser import parseSaks
-from app.common.parsers.sauconyParser import parseSaucony
 from app.common.saver import Saver
 from app.common.setting import DOWNLOAD_FOLDER
 from app.common.sortInput import sortInput
 from app.components.file_card import FileCard
-from app.view.excel_interface.UI_ExcelInterface import Ui_ExcelInterface
 from app.common.set_website_names import set_website_names
+from app.view.getLinks_interface.UI_GetLinksInterface import Ui_GetLinksInterface
 
 
 # Обработчик таблиц в 2 потоке
@@ -42,70 +40,36 @@ class ExcelParser(QObject):
     parse_result = pyqtSignal(list)
     progress_signal = pyqtSignal(int)
 
-    @pyqtSlot(list, int, list, list, str)
-    def parseExcelInThread(self, values, columnIndex, filters, order, websiteName):
-        sources = []
+    @pyqtSlot(list, int, str)
+    def parseExcelInThread(self, values, columnIndex, websiteName):
+        ids = []
         for value in values:
             try:
-                sources.append(value[columnIndex])
+                ids.append(value[columnIndex])
             except IndexError:
-                sources.append(None)
+                ids.append(None)
 
         data = []
         i = 1
-        for source in sources:
+        for id in ids:
             match websiteName:
                 case "Saks85":
                     try:
-                        parsedData = parseSaks(source, filters, order)
+                        url = fetch_saks_links(id)
                     except Exception:
-                        parsedData = source  # Ретёрним линк, если страница не существует
-                case "Saucony":
-                    try:
-                        parsedData = parseSaucony(source)
-                    except Exception:
-                        parsedData = source  # Ретёрним линк, если страница не существует
-                case "Arena":
-                    try:
-                        parsedData = parseArena(source)
-                    except Exception:
-                        parsedData = source  # Ретёрним линк, если страница не существует
+                        url = id  # Ретёрним линк, если страница не существует
                 case "Kidis":
                     try:
-                        parsedData = parseKidis(source, filters, order)
+                        url = fetch_kidis_links(id)
                     except Exception:
-                        parsedData = source  # Ретёрним линк, если страница не существует
-            data.append(parsedData)
+                        url = id  # Ретёрним линк, если страница не существует
+            data.append(url)
             self.progress_signal.emit(i)
             i += 1
 
         self.parse_result.emit(data)
 
-    @pyqtSlot(list, int, list, list)
-    def formatExcelInThread(self, values, columnIndex, filters, order):
-        data = []
-        for value in values:
-            try:
-                data.append(value[columnIndex])
-            except IndexError:
-                data.append(None)
-
-        output = []
-        i = 1
-        for value in data:
-            try:
-                sorted = sortInput(value.split("\n"), filters, order)
-                dotted = addDots(sorted)
-                output.append(dotted)
-            except Exception:
-                output.append(value)
-            self.progress_signal.emit(i)
-            i += 1
-
-        self.format_result.emit(output)
-
-
-class ExcelInterface(Ui_ExcelInterface, QWidget):
+class GetLinksInterface(Ui_GetLinksInterface, QWidget):
     sheetChanged = pyqtSignal(list, int, int)
 
     def __init__(self, parent=None):
@@ -117,11 +81,8 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.current_values = []
         self.max_row = 0
 
-        self.setObjectName("excelInterface")
-        self.toggleUrlParsing()
+        self.setObjectName("getLinksInterface")
         self.tablePreview.verticalHeader().show()
-        self.useUrlToggle.setOnText("Parsing from url`s")
-        self.useUrlToggle.setOffText("Formatting descriptions")
         self.progressBar.setProperty("value", 0)
         self.sheetsView.enableTransparentBackground()
         self.saver = Saver()
@@ -130,7 +91,6 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.ExcelParser = ExcelParser()
         self.ExcelThread = QThread()
         self.ExcelParser.parse_result.connect(self.on_parse_excel_result_ready)
-        self.ExcelParser.format_result.connect(self.on_format_excel_result_ready)
         self.ExcelParser.progress_signal.connect(self.progressUpdate)
         self.ExcelParser.moveToThread(self.ExcelThread)
         self.ExcelThread.start()
@@ -139,22 +99,13 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         self.inputFileCard.addWidget(self.fileCard)
 
         # Иконки при выборе имени сайта
-        set_website_names(self.websiteNameCombo)  # Добавляет элементы выбора в комбо бокс
+        website_names = ["Saks85", "Kidis"]
+        set_website_names(self.websiteNameCombo, website_names)  # Добавляет элементы выбора в комбо бокс
 
         # connect signal to slots
-        self.useUrlToggle.checkedChanged.connect(self.toggleUrlParsing)
         self.fileCard.openButton.clicked.connect(self.getExcelFile)
         self.excelRunBtn.clicked.connect(self.processExcel)
         self.sheetChanged.connect(self.loadExcelTable)
-
-    # Интерфейс
-    def toggleUrlParsing(self):  # Сбрасываем выбор парсинга и блокируем выбор сайта
-        if self.useUrlToggle.isChecked():
-            self.websiteNameCombo.setEnabled(True)
-            self.excelRunBtn.setText("Parse")
-        else:
-            self.websiteNameCombo.setEnabled(False)
-            self.excelRunBtn.setText("Format")
 
     def getExcelFile(self):
         excel_file, _ = QFileDialog.getOpenFileName(self, "Open file", str(DOWNLOAD_FOLDER), "Excel files (*.xlsx)")
@@ -234,7 +185,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         for i in reversed(range(self.horizontalLayout_3.count())):
             self.horizontalLayout_3.itemAt(i).widget().setParent(None)
 
-    # Write data to Excel file
+    # # Write data to Excel file
     def processExcel(self):
         column = self.tablePreview.selectedItems()
         websiteName = self.websiteNameCombo.currentText()
@@ -245,58 +196,29 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
 
         # Отправка в поток-обработчик
         if isinstance(columnIndex, int) and self.current_values != []:
-            if self.useUrlToggle.isChecked():  # парсинг
-                self.fileCard.openButton.setEnabled(False)
-                self.excelRunBtn.setEnabled(False)
-                self.useUrlToggle.setEnabled(False)
-                self.websiteNameCombo.setEnabled(False)
-                self.toggleSheetSelection()
-                QMetaObject.invokeMethod(  # вкидываем данные в поток
-                    self.ExcelParser,
-                    "parseExcelInThread",
-                    Qt.ConnectionType.QueuedConnection,
-                    Q_ARG(list, self.current_values),
-                    Q_ARG(int, columnIndex),
-                    Q_ARG(list, filters),
-                    Q_ARG(list, paramorder),
-                    Q_ARG(str, websiteName),
-                )
-                self.progressBar.setValue(0)
-                self.progressBar.setRange(0, self.max_row)
-                InfoBar.success(
-                    title="Parsing",
-                    content="Parsing your table",
-                    orient=Qt.Horizontal,
-                    isClosable=True,
-                    duration=2000,
-                    position=InfoBarPosition.TOP_RIGHT,
-                    parent=self,
-                )
-            else:  # форматирование
-                self.fileCard.openButton.setEnabled(False)
-                self.excelRunBtn.setEnabled(False)
-                self.useUrlToggle.setEnabled(False)
-                self.toggleSheetSelection()
-                QMetaObject.invokeMethod(  # вкидываем данные в поток
-                    self.ExcelParser,
-                    "formatExcelInThread",
-                    Qt.ConnectionType.QueuedConnection,
-                    Q_ARG(list, self.current_values),
-                    Q_ARG(int, columnIndex),
-                    Q_ARG(list, filters),
-                    Q_ARG(list, paramorder)
-                )
-                self.progressBar.setValue(0)
-                self.progressBar.setRange(0, self.max_row)
-                InfoBar.success(
-                    title="Formatting",
-                    content="Formatting your table",
-                    orient=Qt.Horizontal,
-                    isClosable=True,
-                    duration=2000,
-                    position=InfoBarPosition.TOP_RIGHT,
-                    parent=self,
-                )
+            self.fileCard.openButton.setEnabled(False)
+            self.excelRunBtn.setEnabled(False)
+            self.websiteNameCombo.setEnabled(False)
+            self.toggleSheetSelection()
+            QMetaObject.invokeMethod(  # вкидываем данные в поток
+                self.ExcelParser,
+                "parseExcelInThread",
+                Qt.ConnectionType.QueuedConnection,
+                Q_ARG(list, self.current_values),
+                Q_ARG(int, columnIndex),
+                Q_ARG(str, websiteName),
+            )
+            self.progressBar.setValue(0)
+            self.progressBar.setRange(0, self.max_row)
+            InfoBar.success(
+                title="Parsing",
+                content="Parsing your table",
+                orient=Qt.Horizontal,
+                isClosable=True,
+                duration=2000,
+                position=InfoBarPosition.TOP_RIGHT,
+                parent=self,
+            )
         else:
             InfoBar.warning(
                 title="Error",
@@ -308,15 +230,16 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
                 parent=self,
             )
 
-    # Multithreading get results from ExcelParser worker
+
+    # # Multithreading get results from ExcelParser worker
     def on_parse_excel_result_ready(self, output):
-        filename = f"{self.current_filename}-{self.current_sheetname}-output.xlsx"
+        filename = f"{self.current_filename}-{self.current_sheetname}-links.xlsx"
         output_file = os.path.join(cfg.get(cfg.outputFolder), filename)
         try:
             self.saver.saveToExcel(output, output_file)
             InfoBar.success(
                 title="Parsing",
-                content="Excel table parsed successfully",
+                content="Links from table extracted successfully",
                 orient=Qt.Horizontal,
                 isClosable=True,
                 duration=2000,
@@ -337,39 +260,7 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
 
         self.fileCard.openButton.setEnabled(True)
         self.excelRunBtn.setEnabled(True)
-        self.useUrlToggle.setEnabled(True)
         self.websiteNameCombo.setEnabled(True)
-        self.toggleSheetSelection()
-
-    def on_format_excel_result_ready(self, output):
-        filename = f"{self.current_filename}-{self.current_sheetname}-output.xlsx"
-        output_file = os.path.join(cfg.get(cfg.outputFolder), filename)
-        try:
-            self.saver.saveToExcel(output, output_file)
-
-            InfoBar.success(
-                title="Formatting",
-                content="Excel table formatted successfully",
-                orient=Qt.Horizontal,
-                isClosable=True,
-                duration=2000,
-                position=InfoBarPosition.TOP_RIGHT,
-                parent=self,
-            )
-        except Exception:
-            InfoBar.error(
-                title="Saving",
-                content="An error occurred while writing the file. Check that it is not open in another program.",
-                orient=Qt.Horizontal,
-                isClosable=True,
-                duration=2000,
-                position=InfoBarPosition.TOP_RIGHT,
-                parent=self,
-            )
-
-        self.fileCard.openButton.setEnabled(True)
-        self.excelRunBtn.setEnabled(True)
-        self.useUrlToggle.setEnabled(True)
         self.toggleSheetSelection()
 
     def progressUpdate(self, value):

@@ -39,6 +39,7 @@ from app.common.style_sheet import StyleSheet
 from app.view.parse_interface.parse_interface import ParseInterface
 from app.view.sort_interface.sort_interface import SortInterface
 from app.view.excel_interface.excel_interface import ExcelInterface
+from app.view.getLinks_interface.getLinks_interface import GetLinksInterface
 from app.view.setup_interface.setup_interface import SetupInterface
 from app.view.setting_interface.setting_interface import SettingInterface
 
@@ -96,6 +97,7 @@ class MainWindow(FluentWindow):
         self.parseInterface = ParseInterface(self)
         self.sortInterface = SortInterface(self)
         self.excelInterface = ExcelInterface(self)
+        self.getLinksInterface = GetLinksInterface(self)
         self.setupInterface = SetupInterface(self)
         self.settingInterface = SettingInterface(self)
 
@@ -128,6 +130,7 @@ class MainWindow(FluentWindow):
         self.addSubInterface(self.parseInterface, FIF.CLOUD_DOWNLOAD, self.tr("Parse"), NavigationItemPosition.SCROLL)
         self.addSubInterface(self.sortInterface, FIF.EDIT, self.tr("Sort"), NavigationItemPosition.SCROLL)
         self.addSubInterface(self.excelInterface, CustomIcons.XLSX, self.tr("Excel"), NavigationItemPosition.SCROLL)
+        self.addSubInterface(self.getLinksInterface, CustomIcons.LINK, self.tr("Get Links"), NavigationItemPosition.SCROLL)
         self.addSubInterface(self.setupInterface, CustomIcons.LIST, self.tr("Presets"), NavigationItemPosition.SCROLL)
         self.addSubInterface(self.settingInterface, FIF.SETTING, self.tr("Settings"), NavigationItemPosition.BOTTOM)
 
@@ -144,14 +147,5 @@ class MainWindow(FluentWindow):
         if self.isMicaEffectEnabled():
             QTimer.singleShot(100, lambda: self.windowEffect.setMicaEffect(self.winId(), isDarkTheme()))
 
-    def onThemeChanged(self):
-        self.parseInterface.websiteNameCombo.setIcon(
-            QIcon(CustomIcons[self.parseInterface.websiteNameCombo.text()].path())
-        )
-        self.excelInterface.websiteNameCombo.setIcon(
-            QIcon(CustomIcons[self.excelInterface.websiteNameCombo.text()].path())
-        )
-
     def connectSignalToSlot(self):
         signalBus.micaEnableChanged.connect(self.setMicaEffectEnabled)
-        signalBus.themeChanged.connect(self.onThemeChanged)

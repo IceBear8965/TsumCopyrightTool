@@ -140,15 +140,12 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
 
         # Иконки при выборе имени сайта
         set_websites_names(self.websiteNameCombo)  # Добавляет элементы выбора в комбо бокс
-        self.websiteNameCombo.setIconSize(QSize(16, 16))
-        self.websiteNameCombo.setIcon(QIcon(CustomIcons[self.websiteNameCombo.text()].path()))
 
         # connect signal to slots
         self.useUrlToggle.checkedChanged.connect(self.toggleUrlParsing)
         self.fileCard.openButton.clicked.connect(self.getExcelFile)
         self.excelRunBtn.clicked.connect(self.processExcel)
         self.sheetChanged.connect(self.loadExcelTable)
-        self.websiteNameCombo.currentTextChanged.connect(self.onWebsiteChanged)
 
     # Интерфейс
     def toggleUrlParsing(self):  # Сбрасываем выбор парсинга и блокируем выбор сайта
@@ -158,12 +155,6 @@ class ExcelInterface(Ui_ExcelInterface, QWidget):
         else:
             self.websiteNameCombo.setEnabled(False)
             self.excelRunBtn.setText("Format")
-
-    def onWebsiteChanged(self, selected_element):
-        try:
-            self.websiteNameCombo.setIcon(QIcon(CustomIcons[selected_element].path()))
-        except Exception:
-            self.websiteNameCombo.setIcon(QIcon())
 
     def getExcelFile(self):
         excel_file, _ = QFileDialog.getOpenFileName(self, "Open file", str(DOWNLOAD_FOLDER), "Excel files (*.xlsx)")

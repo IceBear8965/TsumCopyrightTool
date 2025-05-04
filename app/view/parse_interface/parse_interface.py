@@ -38,13 +38,10 @@ class ParseInterface(Ui_ParseInterface, QWidget):
 
         # Иконки при выборе имени сайта
         set_websites_names(self.websiteNameCombo)  # Добавляет элементы выбора в комбо бокс
-        self.websiteNameCombo.setIconSize(QSize(16, 16))
-        self.websiteNameCombo.setIcon(QIcon(CustomIcons[self.websiteNameCombo.text()].path()))
 
         # connect signal to slot
         self.parseBtn.clicked.connect(self.onParseBtnClicked)
         self.copyParsedBtn.clicked.connect(self.copyToClipboard)
-        self.websiteNameCombo.currentTextChanged.connect(self.onWebsiteChanged)
 
     def onParseBtnClicked(self):
         global output
@@ -144,9 +141,3 @@ class ParseInterface(Ui_ParseInterface, QWidget):
                 position=InfoBarPosition.BOTTOM_RIGHT,
                 parent=self,
             )
-
-    def onWebsiteChanged(self, selected_element):
-        try:
-            self.websiteNameCombo.setIcon(QIcon(CustomIcons[selected_element].path()))
-        except Exception:
-            self.websiteNameCombo.setIcon(QIcon())

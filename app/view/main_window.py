@@ -34,7 +34,7 @@ from app.common.saver import Saver
 from app.common.signal_bus import signalBus
 from app.common.config import cfg
 from app.common.icon import CustomIcons
-from app.common.setting import SETTING_FILE
+from app.common.setting import SETTING_FILE, VERSION
 from app.common.style_sheet import StyleSheet
 from app.view.parse_interface.parse_interface import ParseInterface
 from app.view.sort_interface.sort_interface import SortInterface
@@ -44,6 +44,13 @@ from app.view.setting_interface.setting_interface import SettingInterface
 
 basedir = os.path.dirname(__file__)
 
+# Меняем дефолтный идентификатор приложухи на свой, чтоб винда правильно отображала иконку на панели задач
+try:
+    from ctypes import windll  # Only exists on Windows.
+    myappid = f'com.tsumcopyrighttool.{VERSION}'
+    windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+except ImportError:
+    pass
 
 class MainWindow(FluentWindow):
     def __init__(self):
